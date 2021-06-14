@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Move_UR10_unit2">
+
+	<executable package_path="unit_2_flexbe_behaviors.move_ur10_unit2_sm" class="Move_UR10_unit2SM" />
+	<tagstring></tagstring>
+	<author>Niels Avontuur</author>
+	<date>Mon Jun 14 2021</date>
+	<description>
+		Program for moving the UR10 on the Gantry
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

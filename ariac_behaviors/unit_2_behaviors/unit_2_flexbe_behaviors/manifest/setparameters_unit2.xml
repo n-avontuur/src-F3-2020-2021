@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="setParameters_unit2">
+
+	<executable package_path="unit_2_flexbe_behaviors.setparameters_unit2_sm" class="setParameters_unit2SM" />
+	<tagstring></tagstring>
+	<author>Niels Avontuur</author>
+	<date>Mon Jun 14 2021</date>
+	<description>
+		Setting all parameters for moving the gantry and robot
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

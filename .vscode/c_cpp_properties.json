@@ -1,0 +1,54 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "",
+        "limitSymbolsToIncludedHeaders": true
+      },
+      "includePath": [
+        "/home/student/Fase3-2020-2021/devel/include/**",
+        "/home/student/rospackages_ws/devel/include/**",
+        "/opt/ros/melodic/include/**",
+        "/home/student/rospackages_ws/src/navigation-melodic-devel/amcl/include/**",
+        "/home/student/rospackages_ws/src/navigation-melodic-devel/base_local_planner/include/**",
+        "/home/student/rospackages_ws/src/navigation-melodic-devel/clear_costmap_recovery/include/**",
+        "/home/student/rospackages_ws/src/navigation-melodic-devel/costmap_2d/include/**",
+        "/home/student/rospackages_ws/src/depthimage_to_laserscan-melodic-devel/include/**",
+        "/home/student/rospackages_ws/src/navigation-melodic-devel/dwa_local_planner/include/**",
+        "/home/student/rospackages_ws/src/ecl_core-release-0.62-melodic/ecl_concepts/include/**",
+        "/home/student/rospackages_ws/src/ecl_lite-release-0.61-melodic/ecl_config/include/**",
+        "/home/student/rospackages_ws/src/ecl_core-release-0.62-melodic/ecl_eigen/include/**",
+        "/home/student/rospackages_ws/src/ecl_lite-release-0.61-melodic/ecl_errors/include/**",
+        "/home/student/rospackages_ws/src/ecl_core-release-0.62-melodic/ecl_exceptions/include/**",
+        "/home/student/rospackages_ws/src/ecl_core-release-0.62-melodic/ecl_mpl/include/**",
+        "/home/student/rospackages_ws/src/ecl_core-release-0.62-melodic/ecl_threads/include/**",
+        "/home/student/rospackages_ws/src/ecl_core-release-0.62-melodic/ecl_time/include/**",
+        "/home/student/rospackages_ws/src/ecl_lite-release-0.61-melodic/ecl_time_lite/include/**",
+        "/home/student/rospackages_ws/src/ecl_core-release-0.62-melodic/ecl_type_traits/include/**",
+        "/home/student/rospackages_ws/src/ecl_core-release-0.62-melodic/ecl_utilities/include/**",
+        "/home/student/rospackages_ws/src/kobuki-melodic/kobuki_bumper2pc/include/**",
+        "/home/student/rospackages_ws/src/kobuki_desktop-melodic/kobuki_gazebo_plugins/include/**",
+        "/home/student/rospackages_ws/src/kobuki-melodic/kobuki_safety_controller/include/**",
+        "/home/student/rospackages_ws/src/navigation-melodic-devel/map_server/include/**",
+        "/home/student/rospackages_ws/src/navigation-melodic-devel/move_base/include/**",
+        "/home/student/rospackages_ws/src/navigation-melodic-devel/nav_core/include/**",
+        "/home/student/rospackages_ws/src/navigation-melodic-devel/navfn/include/**",
+        "/home/student/Fase3-2020-2021/src/nist_gear/include/**",
+        "/home/student/rospackages_ws/src/openslam_gmapping-melodic-devel/include/**",
+        "/home/student/rospackages_ws/src/robot_pose_ekf-master/include/**",
+        "/home/student/rospackages_ws/src/navigation-melodic-devel/rotate_recovery/include/**",
+        "/home/student/rospackages_ws/src/geometry2-melodic-devel/tf2_sensor_msgs/include/**",
+        "/home/student/rospackages_ws/src/traclabs-trac_ik-eb11e334494a/trac_ik_kinematics_plugin/include/**",
+        "/home/student/rospackages_ws/src/traclabs-trac_ik-eb11e334494a/trac_ik_lib/include/**",
+        "/home/student/rospackages_ws/src/universal_robot-melodic-devel/universal_robot-melodic-devel/ur_kinematics/include/**",
+        "/home/student/rospackages_ws/src/navigation-melodic-devel/voxel_grid/include/**",
+        "/home/student/rospackages_ws/src/yujin_ocs-release-0.8-melodic/yocs_cmd_vel_mux/include/**",
+        "/home/student/rospackages_ws/src/yujin_ocs-release-0.8-melodic/yocs_controllers/include/**",
+        "/home/student/rospackages_ws/src/yujin_ocs-release-0.8-melodic/yocs_velocity_smoother/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS"
+    }
+  ],
+  "version": 4
+}

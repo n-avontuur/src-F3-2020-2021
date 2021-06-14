@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Main_Program_unit2">
+
+	<executable package_path="unit_2_flexbe_behaviors.main_program_unit2_sm" class="Main_Program_unit2SM" />
+	<tagstring></tagstring>
+	<author>Niels Avontuur</author>
+	<date>Mon Jun 14 2021</date>
+	<description>
+		Main program for assembly
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="Move_UR10_unit2" />
+	<contains name="move_Gantry_unit2" />
+	<contains name="setParameters_unit2" />
+
+	<!-- Available Parameters -->
+
+</behavior>
