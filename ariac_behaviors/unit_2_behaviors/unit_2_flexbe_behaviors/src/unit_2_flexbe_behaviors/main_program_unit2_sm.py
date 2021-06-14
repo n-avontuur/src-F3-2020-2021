@@ -8,12 +8,14 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
+from ariac_flexbe_states.detect_part_camera_ariac_state import DetectPartCameraAriacState
+from ariac_flexbe_states.set_GantryParameters import set_Gantry_Parameters
+from ariac_flexbe_states.srdf_state_to_moveit_ariac_state import SrdfStateToMoveitAriac
 from ariac_flexbe_states.start_assignment_state import StartAssignment
 from ariac_logistics_flexbe_states.get_assembly_shipment_from_order_state import GetAssemblyShipmentFromOrderState
 from ariac_logistics_flexbe_states.get_order_state import GetOrderState
-from unit_2_flexbe_behaviors.move_gantry_unit2_sm import move_Gantry_unit2SM
-from unit_2_flexbe_behaviors.move_ur10_unit2_sm import Move_UR10_unit2SM
-from unit_2_flexbe_behaviors.setparameters_unit2_sm import setParameters_unit2SM
+from ariac_logistics_flexbe_states.get_part_from_products_state import GetPartFromProductsState
+from flexbe_states.wait_state import WaitState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -37,9 +39,6 @@ class Main_Program_unit2SM(Behavior):
 		# parameters of this behavior
 
 		# references to used behaviors
-		self.add_behavior(Move_UR10_unit2SM, 'Move_UR10_unit2')
-		self.add_behavior(move_Gantry_unit2SM, 'move_Gantry_unit2')
-		self.add_behavior(setParameters_unit2SM, 'setParameters_unit2')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -51,8 +50,11 @@ class Main_Program_unit2SM(Behavior):
 
 
 	def create(self):
-		# x:1639 y:721, x:737 y:306, x:230 y:415
+		# x:1639 y:721, x:745 y:434, x:230 y:415
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'no_Order'])
+		_state_machine.userdata.zero = 0
+		_state_machine.userdata.part_Number = 0
+		_state_machine.userdata.ref_frame = 'world'
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -61,43 +63,72 @@ class Main_Program_unit2SM(Behavior):
 
 
 		with _state_machine:
-			# x:45 y:36
-			OperatableStateMachine.add('startAsignment',
+			# x:30 y:40
+			OperatableStateMachine.add('startAssignment',
 										StartAssignment(),
 										transitions={'continue': 'getOrderInfo'},
 										autonomy={'continue': Autonomy.Off})
 
-			# x:1541 y:612
-			OperatableStateMachine.add('Move_UR10_unit2',
-										self.use_behavior(Move_UR10_unit2SM, 'Move_UR10_unit2'),
-										transitions={'finished': 'finished', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+			# x:1483 y:369
+			OperatableStateMachine.add('detectPart',
+										DetectPartCameraAriacState(time_out=0.5),
+										transitions={'continue': 'finished', 'failed': 'failed', 'not_found': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off, 'not_found': Autonomy.Off},
+										remapping={'ref_frame': 'ref_frame', 'camera_topic': 'camera_topic', 'camera_frame': 'camera_frame', 'part': 'part_Type', 'pose': 'part_Pose'})
 
-			# x:200 y:38
+			# x:207 y:37
 			OperatableStateMachine.add('getOrderInfo',
 										GetOrderState(),
 										transitions={'order_found': 'GetAssamblyOrderInfo', 'no_order_found': 'no_Order'},
 										autonomy={'order_found': Autonomy.Off, 'no_order_found': Autonomy.Off},
 										remapping={'order_id': 'order_id', 'kitting_shipments': 'kitting_shipments', 'number_of_kitting_shipments': 'number_of_kitting_shipments', 'assembly_shipments': 'assembly_shipments', 'number_of_assembly_shipments': 'number_of_assembly_shipments'})
 
-			# x:1538 y:529
-			OperatableStateMachine.add('move_Gantry_unit2',
-										self.use_behavior(move_Gantry_unit2SM, 'move_Gantry_unit2'),
-										transitions={'finished': 'Move_UR10_unit2', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+			# x:672 y:38
+			OperatableStateMachine.add('getPartFromOrder',
+										GetPartFromProductsState(),
+										transitions={'continue': 'setGantry', 'invalid_index': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'invalid_index': Autonomy.Off},
+										remapping={'products': 'products', 'index': 'part_Number', 'type': 'part_Type', 'pose': 'drop_Pose'})
 
-			# x:797 y:41
-			OperatableStateMachine.add('setParameters_unit2',
-										self.use_behavior(setParameters_unit2SM, 'setParameters_unit2'),
-										transitions={'finished': 'move_Gantry_unit2', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+			# x:1106 y:41
+			OperatableStateMachine.add('moveGantrySection',
+										SrdfStateToMoveitAriac(),
+										transitions={'reached': 'moveGantrySection_2', 'planning_failed': 'wait', 'control_failed': 'wait', 'param_error': 'failed'},
+										autonomy={'reached': Autonomy.Off, 'planning_failed': Autonomy.Off, 'control_failed': Autonomy.Off, 'param_error': Autonomy.Off},
+										remapping={'config_name': 'section_Pose', 'move_group': 'move_group', 'action_topic_namespace': 'action_topic_namespace', 'action_topic': 'action_topic', 'robot_name': 'robot_name', 'config_name_out': 'config_name_out', 'move_group_out': 'move_group_out', 'robot_name_out': 'robot_name_out', 'action_topic_out': 'action_topic_out', 'joint_values': 'joint_values', 'joint_names': 'joint_names'})
 
-			# x:461 y:38
+			# x:1322 y:47
+			OperatableStateMachine.add('moveGantrySection_2',
+										SrdfStateToMoveitAriac(),
+										transitions={'reached': 'detectPart', 'planning_failed': 'wait_2', 'control_failed': 'wait_2', 'param_error': 'failed'},
+										autonomy={'reached': Autonomy.Off, 'planning_failed': Autonomy.Off, 'control_failed': Autonomy.Off, 'param_error': Autonomy.Off},
+										remapping={'config_name': 'table_Pose', 'move_group': 'move_group', 'action_topic_namespace': 'action_topic_namespace', 'action_topic': 'action_topic', 'robot_name': 'robot_name', 'config_name_out': 'config_name_out', 'move_group_out': 'move_group_out', 'robot_name_out': 'robot_name_out', 'action_topic_out': 'action_topic_out', 'joint_values': 'joint_values', 'joint_names': 'joint_names'})
+
+			# x:892 y:42
+			OperatableStateMachine.add('setGantry',
+										set_Gantry_Parameters(),
+										transitions={'continue': 'moveGantrySection', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'station_id': 'station_id', 'table_Pose': 'table_Pose', 'section_Pose': 'section_Pose', 'move_group': 'move_group', 'action_topic_namespace': 'action_topic_namespace', 'action_topic': 'action_topic', 'robot_name': 'robot_name', 'camera_frame': 'camera_frame', 'camera_topic': 'camera_topic'})
+
+			# x:1110 y:166
+			OperatableStateMachine.add('wait',
+										WaitState(wait_time=0.5),
+										transitions={'done': 'moveGantrySection'},
+										autonomy={'done': Autonomy.Off})
+
+			# x:1325 y:159
+			OperatableStateMachine.add('wait_2',
+										WaitState(wait_time=0.5),
+										transitions={'done': 'moveGantrySection_2'},
+										autonomy={'done': Autonomy.Off})
+
+			# x:431 y:36
 			OperatableStateMachine.add('GetAssamblyOrderInfo',
 										GetAssemblyShipmentFromOrderState(),
-										transitions={'continue': 'setParameters_unit2', 'invalid_index': 'failed'},
+										transitions={'continue': 'getPartFromOrder', 'invalid_index': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'invalid_index': Autonomy.Off},
-										remapping={'assembly_shipments': 'assembly_shipments', 'assembly_index': 'number_of_assembly_shipments', 'shipment_type': 'part_Type', 'products': 'products', 'shipment_type': 'shipment_type', 'station_id': 'station_id', 'number_of_products': 'number_of_products'})
+										remapping={'assembly_shipments': 'assembly_shipments', 'assembly_index': 'zero', 'shipment_type': 'part_Type', 'products': 'products', 'station_id': 'station_id', 'number_of_products': 'number_of_products'})
 
 
 		return _state_machine

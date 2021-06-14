@@ -1,25 +1,47 @@
 sensors:
-  logical_camera_station1:
+  logical_camera_station1_agv1:
     type: logical_camera
     pose:
-      xyz: [-5.503480, 3.08904, 1.868509]
-      rpy: [1.570797, 1.570792, 1.570796]
-  logical_camera_station2:
+      xyz: [-4.503480, 4.67, 1.868509]
+      rpy: [1.570797, 1.570792, 0]
+  logical_camera_station1_agv2:
     type: logical_camera
     pose:
-      xyz: [-10.503480, 3.08904, 1.868509]
-      rpy: [1.570797, 1.570792, 1.570796]
-  logical_camera_station3:
-    type: logical_camera
-    pose:
-      xyz: [-5.503480, -3.08904, 1.868509]
-      rpy: [1.570797, 1.570792, 1.570796]
-  logical_camera_station4:
-    type: logical_camera
-    pose:
-      xyz: [-10.503480, -3.08904, 1.868509]
-      rpy: [1.570797, 1.570792, 1.570796]
+      xyz: [-4.503480, 1.33, 1.868509]
+      rpy: [1.570797, 1.570792, 0]
 
+  logical_camera_station2_avg1:
+    type: logical_camera
+    pose:
+      xyz: [-9.503480, 4.67, 1.868509]
+      rpy: [1.570797, 1.570792, 0]
+  logical_camera_station2_avg2:
+    type: logical_camera
+    pose:
+      xyz: [-9.503480, 1.33, 1.868509]
+      rpy: [1.570797, 1.570792, 0]
+
+  logical_camera_station3_agv3:
+    type: logical_camera
+    pose:
+      xyz: [-4.503480, -1.33, 1.868509]
+      rpy: [1.570797, 1.570792, 0]
+  logical_camera_station3_agv4:
+    type: logical_camera
+    pose:
+      xyz: [-4.503480, -4.67, 1.868509]
+      rpy: [1.570797, 1.570792, 0]
+
+  logical_camera_station4_agv3:
+    type: logical_camera
+    pose:
+      xyz: [-9.503480, -1.33, 1.868509]
+      rpy: [1.570797, 1.570792, 0]
+  logical_camera_station4_agv4:
+    type: logical_camera
+    pose:
+      xyz: [-9.503480, -4.67, 1.868509]
+      rpy: [1.570797, 1.570792, 0]
 robot_camera:
   enable: false
 

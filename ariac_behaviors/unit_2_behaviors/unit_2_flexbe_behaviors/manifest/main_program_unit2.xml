@@ -12,9 +12,6 @@
 
 
 	<!-- Contained Behaviors -->
-	<contains name="Move_UR10_unit2" />
-	<contains name="move_Gantry_unit2" />
-	<contains name="setParameters_unit2" />
 
 	<!-- Available Parameters -->
 
