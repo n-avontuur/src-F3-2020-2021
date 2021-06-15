@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Move_UR10_Drop">
+
+	<executable package_path="unit_2_flexbe_behaviors.move_ur10_drop_sm" class="Move_UR10_DropSM" />
+	<tagstring></tagstring>
+	<author>Niels Avontuur</author>
+	<date>Tue Jun 15 2021</date>
+	<description>
+		Program for dropping the part on the correct location
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

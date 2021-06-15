@@ -68,6 +68,7 @@ class GetPartFromProductsState(EventState):
 			return 'invalid_index'
 		userdata.type = userdata.products[userdata.index].type
 		userdata.pose = userdata.products[userdata.index].pose
+		rospy.logwarn(userdata.type)
 		return 'continue'
 
 	def on_enter(self, userdata):

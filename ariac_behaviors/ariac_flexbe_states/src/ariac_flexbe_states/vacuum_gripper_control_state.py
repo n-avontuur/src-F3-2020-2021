@@ -62,11 +62,12 @@ class VacuumGripperControlState(EventState):
 	'''
 
 	def __init__(self, enable):
+		gripper_service = '/ariac/gantry/arm/gripper/control'
 		# Declare outcomes, input_keys, and output_keys by calling the super constructor with the corresponding arguments.
-		super(VacuumGripperControlState, self).__init__(input_keys=['gripper_service'],outcomes = ['continue', 'failed'])
+		super(VacuumGripperControlState, self).__init__(outcomes = ['continue', 'failed'])
 
 		# initialize service proxy
-		self._srv_name = service_name
+		self._srv_name = gripper_service
 		self._srv = ProxyServiceCaller({self._srv_name: VacuumGripperControl})
 
 		self._srv_req = VacuumGripperControlRequest()

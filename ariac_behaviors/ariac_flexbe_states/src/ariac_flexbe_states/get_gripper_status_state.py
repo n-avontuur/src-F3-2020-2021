@@ -54,9 +54,10 @@ class GetGripperStatusState(EventState):
 	'''
 
 	def __init__(self):
+		gripper_status_topic = '/ariac/gantry/arm/gripper/state'
 		# Declare outcomes, input_keys, and output_keys by calling the super constructor with the corresponding arguments.
-		super(GetGripperStatusState, self).__init__(input_keys= ['gripper_status_topic'],outcomes = ['continue', 'fail'], output_keys = ['enabled', 'attached'])
-		self.topic_name = topic_name
+		super(GetGripperStatusState, self).__init__(outcomes = ['continue', 'fail'], output_keys = ['enabled', 'attached'])
+		self.topic_name = gripper_status_topic
 
 
 	def execute(self, userdata):

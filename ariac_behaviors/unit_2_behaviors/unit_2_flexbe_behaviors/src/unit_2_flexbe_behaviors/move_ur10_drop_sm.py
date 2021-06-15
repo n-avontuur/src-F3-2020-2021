@@ -16,18 +16,18 @@ from ariac_flexbe_states.dummy_state import DummyState
 
 
 '''
-Created on Mon Jun 14 2021
+Created on Tue Jun 15 2021
 @author: Niels Avontuur
 '''
-class Move_UR10_unit2SM(Behavior):
+class Move_UR10_DropSM(Behavior):
 	'''
-	Program for moving the UR10 on the Gantry
+	Program for dropping the part on the correct location
 	'''
 
 
 	def __init__(self):
-		super(Move_UR10_unit2SM, self).__init__()
-		self.name = 'Move_UR10_unit2'
+		super(Move_UR10_DropSM, self).__init__()
+		self.name = 'Move_UR10_Drop'
 
 		# parameters of this behavior
 
@@ -43,7 +43,7 @@ class Move_UR10_unit2SM(Behavior):
 
 
 	def create(self):
-		# x:30 y:415, x:130 y:415
+		# x:30 y:463, x:130 y:463
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<behavior name="move_Gantry_unit2">
+<behavior name="Move_UR10_Pick">
 
-	<executable package_path="unit_2_flexbe_behaviors.move_gantry_unit2_sm" class="move_Gantry_unit2SM" />
+	<executable package_path="unit_2_flexbe_behaviors.move_ur10_pick_sm" class="Move_UR10_PickSM" />
 	<tagstring></tagstring>
 	<author>Niels Avontuur</author>
-	<date>Mon Jun 14 2021</date>
+	<date>Tue Jun 15 2021</date>
 	<description>
-		Program for moving the gantry
+		For picking up products
 	</description>
 
 

@@ -14,34 +14,36 @@ class set_Robot_Parameters(EventState):
 	'''
 
 	def __init__(self):
-		super(set_Robot_Parameters,self).__init__(input_keys = ['robot_Name'],outcomes = ['continue', 'failed'], output_keys = ['move_group','action_topic_namespace','action_topic','tool_link','gripper_service','gripper_status_topic','gripper_status_attached','gripper_status_enabled','prePick_Config','robot_name','home_Config'])
+		super(set_Robot_Parameters,self).__init__(input_keys=['part_Type'],outcomes = ['continue', 'failed'], output_keys = ['UR10_move_group','UR10_action_topic_namespace','UR10_action_topic','UR10_tool_link','UR10_robot_name','gripper_service','gripper_status_topic','gripper_status_attached','gripper_status_enabled','armHomeDown','armHomeUp','pick_offset','pick_rotation'])
 
 
 	def execute(self, userdata):
-		if userdata.robot_Name == 'arm1':
-			userdata.move_group = 'gantry_full'
-			userdata.action_topic_namespace = '/ariac/arm1'
-			userdata.action_topic = '/move_group'
-			userdata.robot_name = ''
-			userdata.tool_link = 'ee_link'
-			userdata.gripper_service = '/ariac/arm1/gripper/control'
-			userdata.gripper_status_topic = '/ariac/arm1/gripper/state'
-			userdata.prePick_Config = 'conveyorR1'
-			userdata.home_Config = 'homeR1'
-		elif userdata.robot_Name == 'arm2':
-			userdata.move_group = 'manipulator'
-			userdata.action_topic_namespace = '/ariac/arm2'
-			userdata.action_topic = '/move_group'
-			userdata.robot_name = ''
-			userdata.tool_link = 'ee_link'
-			userdata.gripper_service = '/ariac/arm2/gripper/control'
-			userdata.gripper_status_topic = '/ariac/arm2/gripper/state'
-			userdata.prePick_Config = 'conveyorR2'
-			userdata.home_Config = 'homeR2'
+		if userdata.part_Type == 'assembly_pomp_green' or userdata.part_Type == 'assembly_pomp_red' or userdata.part_Type == 'assembly_pomp_blue':
+			userdata.pick_offset = 0.075
+			userdata.pick_rotation = 0.0
+		elif userdata.part_Type == 'assembly_sensor_green' or userdata.part_Type == 'assembly_sensor_red' or userdata.part_Type == 'assembly_sensor_blue':
+			userdata.pick_offset = 0.060
+			userdata.pick_rotation = 0.0
+		elif userdata.part_Type == 'assembly_regulator_green' or userdata.part_Type == 'assembly_regulator_red' or userdata.part_Type == 'assembly_regulator_blue':
+			userdata.pick_offset = 0.060
+			userdata.pick_rotation = 0.0
+		elif userdata.part_Type == 'assembly_battery_green' or userdata.part_Type == 'assembly_battery_red' or userdata.part_Type == 'assembly_battery_blue':
+			userdata.pick_offset = 0.050
+			userdata.pick_rotation = 0.0
+		else :
+			Logger.logwarn('set RobotParameters :part_Type is not defined for offset')
+			return 'failed'
 		return 'continue'
 
 
 	def on_enter(self, userdata):
+		userdata.UR10_move_group = 'gantry_arm'
+		userdata.UR10_action_topic_namespace = '/ariac/gantry'
+		userdata.UR10_action_topic = '/move_group'
+		userdata.UR10_robot_name = ''
+		userdata.UR10_tool_link = 'ee_link'
+		userdata.armHomeDown = 'gantry_arm_homeDOWN'
+		userdata.armHomeUp = 'gantry_arm_homeUP'
 		pass
 
 	def on_exit(self, userdata):
