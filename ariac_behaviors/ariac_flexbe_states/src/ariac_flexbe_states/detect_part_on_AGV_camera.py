@@ -105,8 +105,6 @@ class DetectPartOnAGVCamera(EventState):
 			return 'time_out'
 		if self._sub.has_msg(self._topic):
 			message = self._sub.get_last_msg(self._topic)
-			liststr = ' '.join([str(elem) for elem in message.models])
-			Logger.loginfo('model type: '+liststr)
 			for model in message.models:
 				if model.type == userdata.part:
 					part_pose = PoseStamped()
@@ -118,8 +116,8 @@ class DetectPartOnAGVCamera(EventState):
 					# Transform the pose to desired output frame
 					part_pose = tf2_geometry_msgs.do_transform_pose(part_pose, self._transform)
 					broadcaster = tf2_ros.StaticTransformBroadcaster()
-					#rospy.logwarn("pose")
-					#rospy.logwarn(part_pose)
+					rospy.logwarn("pose")
+					rospy.logwarn(part_pose)
 					userdata.part_Pose = part_pose
 					userdata.agv_Name = userdata.agv
 					return 'continue'

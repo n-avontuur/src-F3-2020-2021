@@ -83,7 +83,7 @@
         <joint name="torso_rail_joint" value="-2.96" />
     </group_state>
     <group_state name="AS2_Home" group="gantry_torso">
-        <joint name="small_long_joint" value="-8.1" />
+        <joint name="small_long_joint" value="-8.0" />
         <joint name="torso_base_main_joint" value="1.57" />
         <joint name="torso_rail_joint" value="-2.96" />
     </group_state>
@@ -117,7 +117,7 @@
     <group_state name="AS3_AGV4" group="gantry_torso">
         <joint name="small_long_joint" value="-3.14" />
         <joint name="torso_base_main_joint" value="3.14" />
-        <joint name="torso_rail_joint" value="4.5" />
+        <joint name="torso_rail_joint" value="4.22" />
     </group_state>
     <!--AS4-->
     <group_state name="AS4" group="gantry_torso">
@@ -126,19 +126,19 @@
         <joint name="torso_rail_joint" value="3.08" />
     </group_state>
     <group_state name="AS4_Home" group="gantry_torso">
-        <joint name="small_long_joint" value="-8.1" />
+        <joint name="small_long_joint" value="-8.0" />
         <joint name="torso_base_main_joint" value="1.57" />
         <joint name="torso_rail_joint" value="3.01" />
     </group_state>
     <group_state name="AS4_AGV3" group="gantry_torso">
         <joint name="small_long_joint" value="-8.45" />
         <joint name="torso_base_main_joint" value="0" />
-        <joint name="torso_rail_joint" value="2.5" />
+        <joint name="torso_rail_joint" value="2.4" />
     </group_state>
     <group_state name="AS4_AGV4" group="gantry_torso">
-        <joint name="small_long_joint" value="-8.45" />
+        <joint name="small_long_joint" value="-8.60" />
         <joint name="torso_base_main_joint" value="3.14" />
-        <joint name="torso_rail_joint" value="4.50" />
+        <joint name="torso_rail_joint" value="4.22" />
     </group_state>
 
     <!--Section Location-->

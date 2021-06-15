@@ -21,8 +21,8 @@ class set_GantryParameters(EventState):
 		if userdata.station_id == 'as1' or userdata.station_id =='as3':
 			userdata.section_Pose= "gantry_wp_as1_as3"
 			if userdata.station_id == 'as1':
-				userdata.table_Pose= "AS1_Home"
-				userdata.home_Pose='AS1'
+				userdata.table_Pose= "AS1"
+				userdata.home_Pose='AS1_Home'
 				userdata.camera_frame1 = 'logical_camera_station1_agv1_frame'
 				userdata.camera_topic1 = '/ariac/logical_camera_station1_agv1'
 				userdata.camera_frame2 = 'logical_camera_station1_agv2_frame'
@@ -30,8 +30,8 @@ class set_GantryParameters(EventState):
 				userdata.first_agv = 'agv1'
 				userdata.sec_agv = 'agv2'
 			elif userdata.station_id == 'as3':
-				userdata.table_Pose= "AS3_Home"
-				userdata.home_Pose='AS3'
+				userdata.table_Pose= "AS3"
+				userdata.home_Pose='AS3_Home'
 				userdata.camera_frame1 = 'logical_camera_station3_agv3_frame'
 				userdata.camera_topic1 = '/ariac/logical_camera_station3_agv3'
 				userdata.camera_frame2 = 'logical_camera_station3_agv4_frame'
@@ -42,8 +42,8 @@ class set_GantryParameters(EventState):
 		if userdata.station_id == 'as2' or  userdata.station_id =='as4':
 			userdata.section_Pose= "gantry_wp_as2_as4"
 			if userdata.station_id == 'as2':
-				userdata.table_Pose= "AS2_Home"
-				userdata.home_Pose='AS2'
+				userdata.table_Pose= "AS2"
+				userdata.home_Pose='AS2_Home'
 				userdata.camera_frame1 = 'logical_camera_station2_agv1_frame'
 				userdata.camera_topic1 = '/ariac/logical_camera_station2_agv1'
 				userdata.camera_frame2 = 'logical_camera_station2_agv2_frame'
@@ -51,8 +51,8 @@ class set_GantryParameters(EventState):
 				userdata.first_agv = 'agv1'
 				userdata.sec_agv = 'agv2'
 			elif userdata.station_id == 'as4':
-				userdata.table_Pose= "AS4_Home"
-				userdata.home_Pose='AS4'
+				userdata.table_Pose= "AS4"
+				userdata.home_Pose='AS4_Home'
 				userdata.camera_frame1 = 'logical_camera_station4_agv3_frame'
 				userdata.camera_topic1 = '/ariac/logical_camera_station4_agv3'
 				userdata.camera_frame2 = 'logical_camera_station4_agv4_frame'

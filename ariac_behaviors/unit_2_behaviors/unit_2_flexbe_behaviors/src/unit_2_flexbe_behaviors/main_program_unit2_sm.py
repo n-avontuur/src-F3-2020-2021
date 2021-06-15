@@ -16,8 +16,8 @@ from ariac_flexbe_states.start_assignment_state import StartAssignment
 from ariac_logistics_flexbe_states.get_assembly_shipment_from_order_state import GetAssemblyShipmentFromOrderState
 from ariac_logistics_flexbe_states.get_order_state import GetOrderState
 from ariac_logistics_flexbe_states.get_part_from_products_state import GetPartFromProductsState
-from flexbe_states.log_key_state import LogKeyState
 from flexbe_states.wait_state import WaitState
+from unit_2_flexbe_behaviors.home_ur10_sm import Home_UR10SM
 from unit_2_flexbe_behaviors.move_ur10_drop_sm import Move_UR10_DropSM
 from unit_2_flexbe_behaviors.move_ur10_pick_sm import Move_UR10_PickSM
 # Additional imports can be added inside the following tags
@@ -43,6 +43,7 @@ class Main_Program_unit2SM(Behavior):
 		# parameters of this behavior
 
 		# references to used behaviors
+		self.add_behavior(Home_UR10SM, 'Home_UR10')
 		self.add_behavior(Move_UR10_DropSM, 'Move_UR10_Drop')
 		self.add_behavior(Move_UR10_PickSM, 'Move_UR10_Pick')
 
@@ -53,10 +54,13 @@ class Main_Program_unit2SM(Behavior):
 
 		# Behavior comments:
 
+		# ! 1635 20 
+		# Made by Niels Avontuur
+
 
 
 	def create(self):
-		# x:127 y:596, x:745 y:434, x:230 y:415
+		# x:46 y:335, x:745 y:434, x:230 y:415
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'no_Order'])
 		_state_machine.userdata.zero = 0
 		_state_machine.userdata.part_Number = 0
@@ -72,8 +76,14 @@ class Main_Program_unit2SM(Behavior):
 			# x:30 y:40
 			OperatableStateMachine.add('startAssignment',
 										StartAssignment(),
-										transitions={'continue': 'wait_6'},
+										transitions={'continue': 'Home_UR10'},
 										autonomy={'continue': Autonomy.Off})
+
+			# x:145 y:105
+			OperatableStateMachine.add('Home_UR10',
+										self.use_behavior(Home_UR10SM, 'Home_UR10'),
+										transitions={'finished': 'getOrderInfo', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 			# x:559 y:587
 			OperatableStateMachine.add('Move_UR10_Drop',
@@ -102,7 +112,7 @@ class Main_Program_unit2SM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off, 'not_found': Autonomy.Off},
 										remapping={'agv': 'sec_agv', 'ref_frame': 'ref_frame', 'camera_topic': 'camera_topic2', 'camera_frame': 'camera_frame2', 'part': 'part_Type', 'part_Pose': 'part_Pose', 'agv_Name': 'agv_Name'})
 
-			# x:173 y:124
+			# x:192 y:233
 			OperatableStateMachine.add('getOrderInfo',
 										GetOrderState(),
 										transitions={'order_found': 'GetAssamblyOrderInfo', 'no_order_found': 'no_Order'},
@@ -112,18 +122,11 @@ class Main_Program_unit2SM(Behavior):
 			# x:623 y:24
 			OperatableStateMachine.add('getPartFromOrder',
 										GetPartFromProductsState(),
-										transitions={'continue': 'logPartType', 'invalid_index': 'failed'},
+										transitions={'continue': 'set_GantryParameters', 'invalid_index': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'invalid_index': Autonomy.Off},
 										remapping={'products': 'products', 'index': 'part_Number', 'type': 'part_Type', 'pose': 'drop_Pose'})
 
-			# x:801 y:15
-			OperatableStateMachine.add('logPartType',
-										LogKeyState(text="PartType = ", severity=Logger.REPORT_HINT),
-										transitions={'done': 'set_GantryParameters'},
-										autonomy={'done': Autonomy.Off},
-										remapping={'data': 'part_Type'})
-
-			# x:1377 y:434
+			# x:1414 y:597
 			OperatableStateMachine.add('moveGantryAGV',
 										SrdfStateToMoveitAriac(),
 										transitions={'reached': 'Move_UR10_Pick', 'planning_failed': 'wait_4', 'control_failed': 'wait_4', 'param_error': 'failed'},
@@ -203,7 +206,7 @@ class Main_Program_unit2SM(Behavior):
 										transitions={'done': 'moveGantryTable_2'},
 										autonomy={'done': Autonomy.Off})
 
-			# x:1654 y:447
+			# x:1639 y:596
 			OperatableStateMachine.add('wait_4',
 										WaitState(wait_time=0.5),
 										transitions={'done': 'moveGantryAGV'},
@@ -213,12 +216,6 @@ class Main_Program_unit2SM(Behavior):
 			OperatableStateMachine.add('wait_5',
 										WaitState(wait_time=0.5),
 										transitions={'done': 'moveGantrySection_2'},
-										autonomy={'done': Autonomy.Off})
-
-			# x:207 y:24
-			OperatableStateMachine.add('wait_6',
-										WaitState(wait_time=0.5),
-										transitions={'done': 'getOrderInfo'},
 										autonomy={'done': Autonomy.Off})
 
 			# x:349 y:24
