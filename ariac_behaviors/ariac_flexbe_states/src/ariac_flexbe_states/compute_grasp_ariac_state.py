@@ -103,7 +103,7 @@ class ComputeGraspAriacState(EventState):
 		# Main purpose is to check state conditions and trigger a corresponding outcome.
 		# If no outcome is returned, the state will stay active.
 
-		#rospy.logwarn(userdata.pose)
+		rospy.logwarn(userdata.pose)
 
 		if self._failed == True:
 			return 'failed'
@@ -136,7 +136,8 @@ class ComputeGraspAriacState(EventState):
 
 		self._offset = userdata.offset
 		self._rotation = userdata.rotation
-
+		rospy.logerr(userdata.offset)
+		rospy.logerr(userdata.rotation)
 		self._srv_name = userdata.action_topic_namespace + '/compute_ik'
 		self._ik_srv = ProxyServiceCaller({self._srv_name: GetPositionIK})
 
