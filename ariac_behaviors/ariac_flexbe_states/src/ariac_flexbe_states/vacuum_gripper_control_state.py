@@ -61,7 +61,7 @@ class VacuumGripperControlState(EventState):
 
 	'''
 
-	def __init__(self, enable, gripper_service):
+	def __init__(self, enable, gripper_service ):
 		# Declare outcomes, input_keys, and output_keys by calling the super constructor with the corresponding arguments.
 		super(VacuumGripperControlState, self).__init__(outcomes = ['continue', 'failed'])
 
