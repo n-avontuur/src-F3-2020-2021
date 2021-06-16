@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="agv selection">
+
+	<executable package_path="unit_1_flexbe_behaviors.agv_selection_sm" class="agvselectionSM" />
+	<tagstring></tagstring>
+	<author>kemal buke</author>
+	<date>Mon Jun 14 2021</date>
+	<description>
+		takes the agv id given by the order and defines the tray predrop for the rest of the program
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>
