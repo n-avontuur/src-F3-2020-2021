@@ -55,7 +55,7 @@ class Move_UR10_PickSM(Behavior):
 
 
 	def create(self):
-		joint_names = ['gantry_arm_elbow_joint','gantry_arm_shoulder_lift_joint','gantry_arm_shoulder_pan_joint','gantry_arm_wrist_1_joint','gantry_arm_wrist_2_joint','gantry_arm_wrist_3_joint']
+		joint_names = ['gantry_arm_elbow_joint', 'gantry_arm_shoulder_lift_joint', 'gantry_arm_shoulder_pan_joint', 'gantry_arm_wrist_1_joint', 'gantry_arm_wrist_2_joint', 'gantry_arm_wrist_3_joint']
 		# x:1583 y:390, x:130 y:463
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['part_Type', 'part_Pose'])
 		_state_machine.userdata.trueVariable = True
