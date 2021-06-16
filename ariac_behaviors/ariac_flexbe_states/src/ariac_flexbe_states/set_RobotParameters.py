@@ -41,7 +41,7 @@ class set_Robot_Parameters(EventState):
 		userdata.UR10_action_topic_namespace = '/ariac/gantry'
 		userdata.UR10_action_topic = '/move_group'
 		userdata.UR10_robot_name = ''
-		userdata.UR10_tool_link = 'ee_link'
+		userdata.UR10_tool_link = 'gantry_arm_ee_link'
 		userdata.armHomeDown = 'gantry_arm_homeDOWN'
 		userdata.armHomeUp = 'gantry_arm_homeUP'
 		pass

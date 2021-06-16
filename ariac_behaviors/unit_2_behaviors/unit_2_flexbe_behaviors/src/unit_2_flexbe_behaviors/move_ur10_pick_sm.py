@@ -57,10 +57,10 @@ class Move_UR10_PickSM(Behavior):
 	def create(self):
 		joint_names = ['gantry_arm_elbow_joint', 'gantry_arm_shoulder_lift_joint', 'gantry_arm_shoulder_pan_joint', 'gantry_arm_wrist_1_joint', 'gantry_arm_wrist_2_joint', 'gantry_arm_wrist_3_joint']
 		# x:1583 y:390, x:130 y:463
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['part_Type', 'part_Pose'])
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['part_Type', 'pick_Pose'])
 		_state_machine.userdata.trueVariable = True
 		_state_machine.userdata.falseVariable = False
-		_state_machine.userdata.part_Pose = []
+		_state_machine.userdata.pick_Pose = []
 		_state_machine.userdata.part_Type = ''
 
 		# Additional creation code can be added inside the following tags
@@ -82,7 +82,7 @@ class Move_UR10_PickSM(Behavior):
 										AddOffsetToPoseState(),
 										transitions={'continue': 'computePick'},
 										autonomy={'continue': Autonomy.Off},
-										remapping={'input_pose': 'part_Pose', 'offset_pose': 'pose_Decrease', 'output_pose': 'part_Pose'})
+										remapping={'input_pose': 'pick_Pose', 'offset_pose': 'pose_Decrease', 'output_pose': 'pick_Pose'})
 
 			# x:1536 y:74
 			OperatableStateMachine.add('checkGripperStatus',
@@ -96,7 +96,7 @@ class Move_UR10_PickSM(Behavior):
 										ComputeGraspAriacState(joint_names=joint_names),
 										transitions={'continue': 'moveToPick', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'move_group': 'UR10_move_group', 'action_topic_namespace': 'UR10_action_topic_namespace', 'tool_link': 'UR10_tool_link', 'pose': 'part_Pose', 'offset': 'pick_offset', 'rotation': 'pick_rotation', 'joint_values': 'joint_values', 'joint_names': 'joint_names'})
+										remapping={'move_group': 'UR10_move_group', 'action_topic_namespace': 'UR10_action_topic_namespace', 'tool_link': 'UR10_tool_link', 'pose': 'pick_Pose', 'offset': 'pick_offset', 'rotation': 'pick_rotation', 'joint_values': 'joint_values', 'joint_names': 'joint_names'})
 
 			# x:1339 y:224
 			OperatableStateMachine.add('createDecreasePick',
@@ -138,7 +138,7 @@ class Move_UR10_PickSM(Behavior):
 										SrdfStateToMoveitAriac(),
 										transitions={'reached': 'computePick', 'planning_failed': 'wait', 'control_failed': 'wait', 'param_error': 'failed'},
 										autonomy={'reached': Autonomy.Off, 'planning_failed': Autonomy.Off, 'control_failed': Autonomy.Off, 'param_error': Autonomy.Off},
-										remapping={'config_name': 'armHomeDown', 'move_group': 'UR10_move_group', 'action_topic_namespace': 'UR10_action_topic_namespace', 'action_topic': 'UR10_action_topic', 'robot_name': 'UR10_robot_name', 'config_name_out': 'config_name_out', 'move_group_out': 'move_group_out', 'robot_name_out': 'robot_name_out', 'action_topic_out': 'action_topic_out', 'joint_values': 'joint_values', 'joint_names': 'joint_names'})
+										remapping={'config_name': 'armHomeUp', 'move_group': 'UR10_move_group', 'action_topic_namespace': 'UR10_action_topic_namespace', 'action_topic': 'UR10_action_topic', 'robot_name': 'UR10_robot_name', 'config_name_out': 'config_name_out', 'move_group_out': 'move_group_out', 'robot_name_out': 'robot_name_out', 'action_topic_out': 'action_topic_out', 'joint_values': 'joint_values', 'joint_names': 'joint_names'})
 
 			# x:1174 y:24
 			OperatableStateMachine.add('setGripperOn',
@@ -169,7 +169,7 @@ class Move_UR10_PickSM(Behavior):
 										AddOffsetToPoseState(),
 										transitions={'continue': 'computePick'},
 										autonomy={'continue': Autonomy.Off},
-										remapping={'input_pose': 'part_Pose', 'offset_pose': 'pose_Decrease', 'output_pose': 'part_Pose'})
+										remapping={'input_pose': 'pick_Pose', 'offset_pose': 'pose_Decrease', 'output_pose': 'pick_Pose'})
 
 
 		return _state_machine

@@ -53,7 +53,8 @@ class setPickParameters(EventState):
 				return 'failed'
 		else :
 			Logger.logwarn('No station ID')
-			return 'failed'				
+			return 'failed'	
+		Logger.loginfo('agv_pose'+ str(userdata.gantry_AGV_pose))			
 		return 'continue'
 
 

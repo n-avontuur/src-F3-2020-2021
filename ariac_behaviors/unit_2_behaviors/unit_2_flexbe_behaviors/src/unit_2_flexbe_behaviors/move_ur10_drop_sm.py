@@ -52,7 +52,7 @@ class Move_UR10_DropSM(Behavior):
 	def create(self):
 		joint_names = ['gantry_arm_elbow_joint', 'gantry_arm_shoulder_lift_joint', 'gantry_arm_shoulder_pan_joint', 'gantry_arm_wrist_1_joint', 'gantry_arm_wrist_2_joint', 'gantry_arm_wrist_3_joint']
 		# x:1107 y:701, x:617 y:408
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['part_Type', 'drop_Pose'])
 		_state_machine.userdata.part_Type = ''
 		_state_machine.userdata.drop_Pose = []
 		_state_machine.userdata.drop_Offset = 0

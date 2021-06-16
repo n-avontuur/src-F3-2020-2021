@@ -12,9 +12,10 @@
 
 
 	<!-- Contained Behaviors -->
-	<contains name="Home_UR10" />
 	<contains name="Move_UR10_Drop" />
 	<contains name="Move_UR10_Pick" />
+	<contains name="setParameters_unit2" />
+	<contains name="Home_UR10" />
 
 	<!-- Available Parameters -->
 
