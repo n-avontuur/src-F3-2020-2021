@@ -45,6 +45,7 @@ class Home_UR10SM(Behavior):
 
 
 	def create(self):
+		service_name = '/ariac/gantry/arm/gripper/controle'
 		# x:760 y:144, x:130 y:463
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 		_state_machine.userdata.config_name = 'gantry_arm_homeUP'
@@ -69,7 +70,7 @@ class Home_UR10SM(Behavior):
 
 			# x:308 y:123
 			OperatableStateMachine.add('setGripperOFF',
-										VacuumGripperControlState(enable=False),
+										VacuumGripperControlState(enable=False, service_name=service_name),
 										transitions={'continue': 'finished', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 

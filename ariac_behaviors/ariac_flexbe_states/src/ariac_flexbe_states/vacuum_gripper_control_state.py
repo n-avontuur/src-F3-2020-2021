@@ -61,12 +61,12 @@ class VacuumGripperControlState(EventState):
 
 	'''
 
-	def __init__(self, enable, gripper_service ):
+	def __init__(self, enable, service_name):
 		# Declare outcomes, input_keys, and output_keys by calling the super constructor with the corresponding arguments.
 		super(VacuumGripperControlState, self).__init__(outcomes = ['continue', 'failed'])
 
 		# initialize service proxy
-		self._srv_name = gripper_service
+		self._srv_name = service_name
 		self._srv = ProxyServiceCaller({self._srv_name: VacuumGripperControl})
 
 		self._srv_req = VacuumGripperControlRequest()

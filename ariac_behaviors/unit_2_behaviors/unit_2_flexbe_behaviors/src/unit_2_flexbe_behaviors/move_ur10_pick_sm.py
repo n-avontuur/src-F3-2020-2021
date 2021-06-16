@@ -56,7 +56,7 @@ class Move_UR10_PickSM(Behavior):
 
 	def create(self):
 		joint_names = ['gantry_arm_elbow_joint', 'gantry_arm_shoulder_lift_joint', 'gantry_arm_shoulder_pan_joint', 'gantry_arm_wrist_1_joint', 'gantry_arm_wrist_2_joint', 'gantry_arm_wrist_3_joint']
-		gripper_service = '/ariac/gantry/arm/gripper/control'
+		gripper_service = '/ariac/gantry/arm/gripper/controle'
 		# x:1583 y:390, x:130 y:463
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['part_Type', 'pick_Pose'])
 		_state_machine.userdata.trueVariable = True
@@ -129,7 +129,7 @@ class Move_UR10_PickSM(Behavior):
 
 			# x:1174 y:24
 			OperatableStateMachine.add('setGripperOn',
-										VacuumGripperControlState(enable=True, gripper_service=gripper_service),
+										VacuumGripperControlState(enable=True, service_name=gripper_service),
 										transitions={'continue': 'wait_3', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 

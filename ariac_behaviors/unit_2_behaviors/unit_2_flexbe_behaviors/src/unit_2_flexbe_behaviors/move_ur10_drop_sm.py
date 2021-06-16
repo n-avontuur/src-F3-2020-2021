@@ -51,6 +51,8 @@ class Move_UR10_DropSM(Behavior):
 
 	def create(self):
 		joint_names = ['gantry_arm_elbow_joint', 'gantry_arm_shoulder_lift_joint', 'gantry_arm_shoulder_pan_joint', 'gantry_arm_wrist_1_joint', 'gantry_arm_wrist_2_joint', 'gantry_arm_wrist_3_joint']
+		service_name = '/ariac/gantry/arm/gripper/controle'
+		gripper_status_topic = '/ariac/gantry/arm/gripper/state'
 		# x:1107 y:701, x:617 y:408
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['part_Type', 'drop_Pose'])
 		_state_machine.userdata.part_Type = ''
@@ -111,7 +113,7 @@ class Move_UR10_DropSM(Behavior):
 
 			# x:1024 y:174
 			OperatableStateMachine.add('setGripperOff',
-										VacuumGripperControlState(enable=False, gripper_service='/ariac/gantry/arm/gripper/controle'),
+										VacuumGripperControlState(enable=False, service_name=service_name),
 										transitions={'continue': 'wait_3', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
@@ -141,7 +143,7 @@ class Move_UR10_DropSM(Behavior):
 
 			# x:1246 y:290
 			OperatableStateMachine.add('checkGripperStatus',
-										GetGripperStatusState(gripper_status_topic='/ariac/gantry/arm/gripper/state'),
+										GetGripperStatusState(gripper_status_topic=gripper_status_topic),
 										transitions={'continue': 'partDettached', 'fail': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'fail': Autonomy.Off},
 										remapping={'enabled': 'gripper_enabled', 'attached': 'gripper_attached'})
