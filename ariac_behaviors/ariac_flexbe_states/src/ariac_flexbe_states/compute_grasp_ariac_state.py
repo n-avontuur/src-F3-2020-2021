@@ -118,8 +118,8 @@ class ComputeGraspAriacState(EventState):
 			# solution_dict = dict(zip(joint_names, j_angles))
 			userdata.joint_values = copy.deepcopy(j_angles)
 			userdata.joint_names = copy.deepcopy(joint_names)
-			#rospy.logerr(userdata.joint_names)
-			#rospy.logerr(userdata.joint_values)
+			rospy.logerr(userdata.joint_names)
+			rospy.logerr(userdata.joint_values)
 			return 'continue'
 		else:
 			rospy.logerr(self._srv_result)
@@ -154,6 +154,8 @@ class ComputeGraspAriacState(EventState):
 			try:
 				#rospy.loginfo('x')				
 				target_pose = self._tf_buffer.transform(userdata.pose, "world") #"linear_arm_actuator")#"world")
+				rospy.loginfo('target pose :')
+				rospy.loginfo(target_pose)
 				break
 			except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
 				rospy.logerr("ComputeGraspState::on_enter - Failed to transform to world")

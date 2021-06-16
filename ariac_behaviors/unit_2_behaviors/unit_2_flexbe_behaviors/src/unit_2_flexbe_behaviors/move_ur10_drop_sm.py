@@ -9,11 +9,11 @@
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from ariac_flexbe_states.compute_grasp_ariac_state import ComputeGraspAriacState
-from ariac_flexbe_states.get_gripper_status_state import GetGripperStatusState
+from ariac_flexbe_states.get_gripper_status_state2 import GetGripperStatusState2
 from ariac_flexbe_states.moveit_to_joints_dyn_ariac_state import MoveitToJointsDynAriacState
-from ariac_flexbe_states.set_RobotParameters import set_Robot_Parameters
+from ariac_flexbe_states.set_RobotParameters import set_Robot_Parameters as ariac_flexbe_states__set_Robot_Parameters
 from ariac_flexbe_states.srdf_state_to_moveit_ariac_state import SrdfStateToMoveitAriac
-from ariac_flexbe_states.vacuum_gripper_control_state import VacuumGripperControlState
+from ariac_flexbe_states.vacuum_gripper_control_state2 import VacuumGripperControlState2
 from flexbe_states.wait_state import WaitState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
@@ -49,12 +49,15 @@ class Move_UR10_DropSM(Behavior):
 
 
 	def create(self):
+		joint_names = ['gantry_arm_elbow_joint', 'gantry_arm_shoulder_lift_joint', 'gantry_arm_shoulder_pan_joint', 'gantry_arm_wrist_1_joint', 'gantry_arm_wrist_2_joint', 'gantry_arm_wrist_3_joint']
 		# x:1190 y:525, x:617 y:408
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['part_Type', 'drop_Pose'])
 		_state_machine.userdata.part_Type = ''
-		_state_machine.userdata.drop_Pose = []
 		_state_machine.userdata.drop_Offset = 0
 		_state_machine.userdata.drop_Rotation = 0
+		_state_machine.userdata.falseVariable = False
+		_state_machine.userdata.trueVariable = True
+		_state_machine.userdata.drop_Pose = []
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -63,12 +66,12 @@ class Move_UR10_DropSM(Behavior):
 
 
 		with _state_machine:
-			# x:135 y:174
+			# x:14 y:137
 			OperatableStateMachine.add('setRobotParameters',
-										set_Robot_Parameters(),
+										ariac_flexbe_states__set_Robot_Parameters(),
 										transitions={'continue': 'moveToPreDrop', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'part_Type': 'part_Type', 'UR10_move_group': 'UR10_move_group', 'UR10_action_topic_namespace': 'UR10_action_topic_namespace', 'UR10_action_topic': 'UR10_action_topic', 'UR10_tool_link': 'UR10_tool_link', 'UR10_robot_name': 'UR10_robot_name', 'gripper_service': 'gripper_service', 'gripper_status_topic': 'gripper_status_topic', 'gripper_status_attached': 'gripper_status_attached', 'gripper_status_enabled': 'gripper_status_enabled', 'armHomeDown': 'armHomeDown', 'armHomeUp': 'armHomeUp', 'pick_offset': 'part_offset', 'pick_rotation': 'part_rotation'})
+										remapping={'part_Type': 'part_Type', 'UR10_move_group': 'UR10_move_group', 'UR10_action_topic_namespace': 'UR10_action_topic_namespace', 'UR10_action_topic': 'UR10_action_topic', 'UR10_tool_link': 'UR10_tool_link', 'UR10_robot_name': 'UR10_robot_name', 'gripper_service': 'gripper_service', 'gripper_status_topic': 'gripper_status_topic', 'gripper_status_attached': 'gripper_status_attached', 'gripper_status_enabled': 'gripper_status_enabled', 'armHomeDown': 'armHomeDown', 'armHomeUp': 'armHomeUp', 'armHomeAS': 'armHomeAS', 'pick_offset': 'part_offset', 'pick_rotation': 'part_rotation'})
 
 			# x:579 y:174
 			OperatableStateMachine.add('computeDrop',
@@ -89,11 +92,11 @@ class Move_UR10_DropSM(Behavior):
 										SrdfStateToMoveitAriac(),
 										transitions={'reached': 'computeDrop', 'planning_failed': 'wait', 'control_failed': 'wait', 'param_error': 'failed'},
 										autonomy={'reached': Autonomy.Off, 'planning_failed': Autonomy.Off, 'control_failed': Autonomy.Off, 'param_error': Autonomy.Off},
-										remapping={'config_name': 'armHomeUp', 'move_group': 'UR10_move_group', 'action_topic_namespace': 'UR10_action_topic_namespace', 'action_topic': 'UR10_action_topic', 'robot_name': 'UR10_robot_name', 'config_name_out': 'config_name_out', 'move_group_out': 'move_group_out', 'robot_name_out': 'robot_name_out', 'action_topic_out': 'action_topic_out', 'joint_values': 'joint_values', 'joint_names': 'joint_names'})
+										remapping={'config_name': 'armHomeAS', 'move_group': 'UR10_move_group', 'action_topic_namespace': 'UR10_action_topic_namespace', 'action_topic': 'UR10_action_topic', 'robot_name': 'UR10_robot_name', 'config_name_out': 'config_name_out', 'move_group_out': 'move_group_out', 'robot_name_out': 'robot_name_out', 'action_topic_out': 'action_topic_out', 'joint_values': 'joint_values', 'joint_names': 'joint_names'})
 
 			# x:1024 y:174
 			OperatableStateMachine.add('setGripperOff',
-										VacuumGripperControlState(enable=False),
+										VacuumGripperControlState2(enable=False),
 										transitions={'continue': 'wait_3', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
@@ -117,7 +120,7 @@ class Move_UR10_DropSM(Behavior):
 
 			# x:1246 y:290
 			OperatableStateMachine.add('checkGripperStatus',
-										GetGripperStatusState(),
+										GetGripperStatusState2(),
 										transitions={'continue': 'finished', 'fail': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'fail': Autonomy.Off},
 										remapping={'enabled': 'enabled', 'attached': 'attached'})

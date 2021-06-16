@@ -2,7 +2,7 @@
 
 # Software License Agreement (BSD License)
 #
-# Copyright (c) 2018, Delft University of Technology
+# Copyright (c) 2020, Avans Hogeschool
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -15,7 +15,7 @@
 #    copyright notice, this list of conditions and the following
 #    disclaimer in the documentation and/or other materials provided
 #    with the distribution.
-#  * Neither the name of Delft University of Technology nor the names of its
+#  * Neither the name of Avans Hogeschool nor the names of its
 #    contributors may be used to endorse or promote products derived
 #    from this software without specific prior written permission.
 #
@@ -32,94 +32,69 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 #
-# Authors: the HRWROS mooc instructors
+# Authors: Gerard Harkema
 
 import rospy
 
 from flexbe_core import EventState, Logger
-from flexbe_core.proxy import ProxyServiceCaller
+from nist_gear.msg import VacuumGripperState
 
-from nist_gear.srv import VacuumGripperControl, VacuumGripperControlRequest
 
-'''
-
-Created on Sep 5 2018
-
-@author: HRWROS mooc instructors
-
-'''
-
-class VacuumGripperControlState(EventState):
+class GetGripperStatusState2(EventState):
 	'''
-	State to control any suction gripper in the factory simulation of the MOOC "Hello (Real) World with ROS"
+	Gets the status of the Gripper: "ready_to_deliver", "preparing_to_deliver", "delevering", "returning"
 
-	-- enable	 		bool 		'true' to activates the gripper, 'false' to deactivate it
-	-- service_name		string		topic name for the service corresponding to the gripper to control
+	-- topic_name		string		topic name for the topic to get status of gripper
+	#> enabled		bool		True if gripper is ennabeld
+	#> attached		bool		True if object is attached
 
-	<= continue 					if the gripper activation or de-activation has been succesfully achieved
-	<= failed 						otherwise
+	<= continue 		Given time has passed.
+	<= fail			
 
 	'''
 
-	def __init__(self, enable):
-		gripper_service = '/ariac/gantry/arm/gripper/control'
+	def __init__(self):
+		gripper_status_topic = '/ariac/gantry/arm/gripper/state'
 		# Declare outcomes, input_keys, and output_keys by calling the super constructor with the corresponding arguments.
-		super(VacuumGripperControlState, self).__init__(outcomes = ['continue', 'failed'])
+		super(GetGripperStatusState2, self).__init__(outcomes = ['continue', 'fail'], output_keys = ['enabled', 'attached'])
+		self.topic_name = gripper_status_topic
 
-		# initialize service proxy
-		self._srv_name = gripper_service
-		self._srv = ProxyServiceCaller({self._srv_name: VacuumGripperControl})
-
-		self._srv_req = VacuumGripperControlRequest()
-		if enable:
-			self._srv_req.enable = True
-		else:
-			self._srv_req.enable = False
 
 	def execute(self, userdata):
 		# This method is called periodically while the state is active.
 		# Main purpose is to check state conditions and trigger a corresponding outcome.
 		# If no outcome is returned, the state will stay active.
-
-		if self._failed:
-			return 'failed'
-
-		if self._srv_result.success is True:
-			return 'continue'
-		else:
-			Logger.logwarn('Could not change gripper state')
-			return 'failed'
-
+		#rospy.logwarn('before wait message')
+		status = rospy.wait_for_message(self.topic_name, VacuumGripperState)
+		rospy.logwarn(status)
+		userdata.enabled = status.enabled
+		userdata.attached = status.attached
+		return 'continue'
 
 	def on_enter(self, userdata):
 		# This method is called when the state becomes active, i.e. a transition from another state to this one is taken.
 		# It is primarily used to start actions which are associated with this state.
+		pass # Nothing to do in this example.
 
-		try:
-			self._srv_result = self._srv.call(self._srv_name, self._srv_req)
-			self._failed = False
-
-		except Exception as e:
-			Logger.logwarn('Could not change gripper state')
-			rospy.logwarn(str(e))
-			self._failed = True
 
 
 	def on_exit(self, userdata):
 		# This method is called when an outcome is returned and another state gets active.
 		# It can be used to stop possibly running processes started by on_enter.
 
-		pass # Nothing to do
+		pass # Nothing to do in this example.
 
 
 	def on_start(self):
 		# This method is called when the behavior is started.
 		# If possible, it is generally better to initialize used resources in the constructor
 		# because if anything failed, the behavior would not even be started.
-		pass
+
+		pass # Nothing to do in this example.
+
 
 	def on_stop(self):
 		# This method is called whenever the behavior stops execution, also if it is cancelled.
 		# Use this event to clean up things like claimed resources.
 
-		pass # Nothing to do
+		pass # Nothing to do in this example.

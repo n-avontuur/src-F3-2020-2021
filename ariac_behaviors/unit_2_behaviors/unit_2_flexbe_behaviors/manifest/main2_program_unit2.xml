@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Main2_Program_unit2">
+
+	<executable package_path="unit_2_flexbe_behaviors.main2_program_unit2_sm" class="Main2_Program_unit2SM" />
+	<tagstring></tagstring>
+	<author>Niels Avontuur</author>
+	<date>Wed Jun 16 2021</date>
+	<description>
+		Second main program with all the behaviors is state of state's
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="setParameters_unit2" />
+	<contains name="Move_UR10_Drop" />
+	<contains name="Move_UR10_Pick" />
+	<contains name="Home_UR10" />
+
+	<!-- Available Parameters -->
+
+</behavior>

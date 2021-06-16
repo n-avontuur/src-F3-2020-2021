@@ -116,7 +116,7 @@ class DetectPartOnAGVCamera(EventState):
 					# Transform the pose to desired output frame
 					part_pose = tf2_geometry_msgs.do_transform_pose(part_pose, self._transform)
 					broadcaster = tf2_ros.StaticTransformBroadcaster()
-					rospy.logwarn("pose")
+					rospy.logwarn("pose out Camera: ")
 					rospy.logwarn(part_pose)
 					userdata.part_Pose = part_pose
 					userdata.agv_Name = userdata.agv

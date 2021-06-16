@@ -40,10 +40,18 @@
         <joint name="gantry_arm_wrist_3_joint" value="0.83" />
     </group_state>
     <group_state name="gantry_arm_homeDOWN" group="gantry_arm">
-        <joint name="gantry_arm_elbow_joint" value="0.92" />
-        <joint name="gantry_arm_shoulder_lift_joint" value="0.00" />
+        <joint name="gantry_arm_elbow_joint" value="1.25" />
+        <joint name="gantry_arm_shoulder_lift_joint" value="-0.5" />
         <joint name="gantry_arm_shoulder_pan_joint" value="0" />
-        <joint name="gantry_arm_wrist_1_joint" value="-1.13" />
+        <joint name="gantry_arm_wrist_1_joint" value="-0.72" />
+        <joint name="gantry_arm_wrist_2_joint" value="1.55" />
+        <joint name="gantry_arm_wrist_3_joint" value="0.83" />
+    </group_state>
+        <group_state name="gantry_arm_homeAS" group="gantry_arm">
+        <joint name="gantry_arm_elbow_joint" value="1.75" />
+        <joint name="gantry_arm_shoulder_lift_joint" value="-2.13" />
+        <joint name="gantry_arm_shoulder_pan_joint" value="0" />
+        <joint name="gantry_arm_wrist_1_joint" value="-0.37" />
         <joint name="gantry_arm_wrist_2_joint" value="1.55" />
         <joint name="gantry_arm_wrist_3_joint" value="0.83" />
     </group_state>

@@ -2,7 +2,7 @@
 
 # Software License Agreement (BSD License)
 #
-# Copyright (c) 2020, Avans Hogeschool
+# Copyright (c) 2018, Delft University of Technology
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -15,7 +15,7 @@
 #    copyright notice, this list of conditions and the following
 #    disclaimer in the documentation and/or other materials provided
 #    with the distribution.
-#  * Neither the name of Avans Hogeschool nor the names of its
+#  * Neither the name of Delft University of Technology nor the names of its
 #    contributors may be used to endorse or promote products derived
 #    from this software without specific prior written permission.
 #
@@ -35,66 +35,107 @@
 # Authors: Gerard Harkema
 
 import rospy
+import rostopic
+import inspect
+
+import tf2_ros
+import tf2_geometry_msgs
+import geometry_msgs.msg
+
 
 from flexbe_core import EventState, Logger
-from nist_gear.msg import VacuumGripperState
+from geometry_msgs.msg import Pose, PoseStamped
+from flexbe_core.proxy import ProxySubscriberCached
 
+'''
 
-class GetGripperStatusState(EventState):
+Created on March 21, 2021
+
+@author: Gerard Harkema
+
+'''
+
+class GetObjectPoseState(EventState):
 	'''
-	Gets the status of the Gripper: "ready_to_deliver", "preparing_to_deliver", "delevering", "returning"
+	State to detect the pose of a part/object
+	># ref_frame		string		reference frame for the object pose output key
+  	># frame		string		frame of the object t pose output key
+	#> pose			PoseStamped	Pose of the detected part
 
-	-- topic_name		string		topic name for the topic to get status of gripper
-	#> enabled		bool		True if gripper is ennabeld
-	#> attached		bool		True if object is attached
-
-	<= continue 		Given time has passed.
-	<= fail			
+	<= continue 				if the pose of the part has been succesfully obtained
+	<= failed 				otherwise
 
 	'''
 
 	def __init__(self):
-		gripper_status_topic = '/ariac/gantry/arm/gripper/state'
 		# Declare outcomes, input_keys, and output_keys by calling the super constructor with the corresponding arguments.
-		super(GetGripperStatusState, self).__init__(outcomes = ['continue', 'fail'], output_keys = ['enabled', 'attached'])
-		self.topic_name = gripper_status_topic
+		super(GetObjectPoseState, self).__init__(outcomes = ['continue', 'failed'], input_keys = ['ref_frame', 'frame'], output_keys = ['pose'])
+
+
+
+		# tf to transfor the object pose
+		self._tf_buffer = tf2_ros.Buffer(rospy.Duration(10.0)) #tf buffer length
+		self._tf_listener = tf2_ros.TransformListener(self._tf_buffer)
+		self._failed = False
 
 
 	def execute(self, userdata):
 		# This method is called periodically while the state is active.
 		# Main purpose is to check state conditions and trigger a corresponding outcome.
 		# If no outcome is returned, the state will stay active.
-		#rospy.logwarn('before wait message')
-		status = rospy.wait_for_message(self.topic_name, VacuumGripperState)
-		rospy.logwarn(status)
-		userdata.enabled = status.enabled
-		userdata.attached = status.attached
+
+		if self._failed:
+			userdata.pose = None
+			return 'failed'
+
+		pose_stamped = PoseStamped()
+
+		pose_stamped.header.stamp = rospy.Time.now()
+		# Transform the pose to desired output frame
+		pose_stamped = tf2_geometry_msgs.do_transform_pose(pose_stamped, self._transform)
+		#rospy.loginfo("after transform:")
+		#rospy.loginfo(pose_stamped)
+		userdata.pose = pose_stamped
 		return 'continue'
 
 	def on_enter(self, userdata):
 		# This method is called when the state becomes active, i.e. a transition from another state to this one is taken.
 		# It is primarily used to start actions which are associated with this state.
-		pass # Nothing to do in this example.
 
+		self._start_time = rospy.get_rostime()
+
+
+		# Get transform between world and robot_base
+		try:
+			self._transform = self._tf_buffer.lookup_transform(userdata.ref_frame,
+                                       userdata.frame, #source frame
+                                       rospy.Time(0), #get the tf at first available time
+                                       rospy.Duration(0.5))
+			#rospy.loginfo("after lookup")
+			#rospy.loginfo(self._transform)
+		except Exception as e:
+			Logger.logwarn('Could not transform pose: ' + str(e))
+		 	self._failed = True
 
 
 	def on_exit(self, userdata):
 		# This method is called when an outcome is returned and another state gets active.
 		# It can be used to stop possibly running processes started by on_enter.
 
-		pass # Nothing to do in this example.
+		pass # Nothing to do
 
 
 	def on_start(self):
 		# This method is called when the behavior is started.
 		# If possible, it is generally better to initialize used resources in the constructor
 		# because if anything failed, the behavior would not even be started.
-
-		pass # Nothing to do in this example.
-
+		self._start_time = rospy.Time.now()
 
 	def on_stop(self):
 		# This method is called whenever the behavior stops execution, also if it is cancelled.
 		# Use this event to clean up things like claimed resources.
 
-		pass # Nothing to do in this example.
+		pass # Nothing to do
+
+
+

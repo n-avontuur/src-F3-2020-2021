@@ -9,7 +9,7 @@
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from ariac_flexbe_states.srdf_state_to_moveit_ariac_state import SrdfStateToMoveitAriac
-from ariac_flexbe_states.vacuum_gripper_control_state import VacuumGripperControlState
+from ariac_flexbe_states.vacuum_gripper_control_state2 import VacuumGripperControlState2
 from flexbe_states.wait_state import WaitState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
@@ -45,6 +45,7 @@ class Home_UR10SM(Behavior):
 
 
 	def create(self):
+		joint_names = ['gantry_arm_elbow_joint', 'gantry_arm_shoulder_lift_joint', 'gantry_arm_shoulder_pan_joint', 'gantry_arm_wrist_1_joint', 'gantry_arm_wrist_2_joint', 'gantry_arm_wrist_3_joint']
 		# x:760 y:144, x:130 y:463
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 		_state_machine.userdata.config_name = 'gantry_arm_homeUP'
@@ -69,7 +70,7 @@ class Home_UR10SM(Behavior):
 
 			# x:308 y:123
 			OperatableStateMachine.add('setGripperOFF',
-										VacuumGripperControlState(enable=False),
+										VacuumGripperControlState2(enable=False),
 										transitions={'continue': 'finished', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
