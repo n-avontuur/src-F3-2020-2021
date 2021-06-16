@@ -10,6 +10,7 @@
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from ariac_flexbe_states.add_offset_to_pose_state import AddOffsetToPoseState
 from ariac_flexbe_states.compute_grasp_ariac_state import ComputeGraspAriacState
+from ariac_flexbe_states.create_dropPose import CreateDropPoseState
 from ariac_flexbe_states.create_pose import CreatePoseState
 from ariac_flexbe_states.get_gripper_status_state2 import GetGripperStatusState2
 from ariac_flexbe_states.moveit_to_joints_dyn_ariac_state import MoveitToJointsDynAriacState
@@ -56,14 +57,15 @@ class Move_UR10_PickSM(Behavior):
 
 	def create(self):
 		joint_names = ['gantry_arm_elbow_joint','gantry_arm_shoulder_lift_joint','gantry_arm_shoulder_pan_joint','gantry_arm_wrist_1_joint','gantry_arm_wrist_2_joint','gantry_arm_wrist_3_joint']
-		# x:1156 y:720, x:661 y:427
+		# x:366 y:674, x:419 y:463
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['part_Type', 'part_Pose'])
 		_state_machine.userdata.trueVariable = True
 		_state_machine.userdata.falseVariable = False
 		_state_machine.userdata.part_Pose = []
 		_state_machine.userdata.part_Type = ''
-		_state_machine.userdata.drop_offset = 0.1
+		_state_machine.userdata.drop_offset = 0.3
 		_state_machine.userdata.rotation = 0.0
+		_state_machine.userdata.offset = 0.0
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -77,9 +79,16 @@ class Move_UR10_PickSM(Behavior):
 										set_Robot_Parameters(),
 										transitions={'continue': 'moveToPrePick', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'part_Type': 'part_Type', 'UR10_move_group': 'UR10_move_group', 'UR10_action_topic_namespace': 'UR10_action_topic_namespace', 'UR10_action_topic': 'UR10_action_topic', 'UR10_tool_link': 'UR10_tool_link', 'UR10_robot_name': 'UR10_robot_name', 'gripper_service': 'gripper_service', 'gripper_status_topic': 'gripper_status_topic', 'gripper_status_attached': 'gripper_status_attached', 'gripper_status_enabled': 'gripper_status_enabled', 'armHomeDown': 'armHomeDown', 'armHomeUp': 'armHomeUp', 'pick_offset': 'pick_offset', 'pick_rotation': 'pick_rotation'})
+										remapping={'part_Type': 'part_Type', 'UR10_move_group': 'UR10_move_group', 'UR10_action_topic_namespace': 'UR10_action_topic_namespace', 'UR10_action_topic': 'UR10_action_topic', 'UR10_tool_link': 'UR10_tool_link', 'UR10_robot_name': 'UR10_robot_name', 'gripper_service': 'gripper_service', 'gripper_status_topic': 'gripper_status_topic', 'gripper_status_attached': 'gripper_status_attached', 'gripper_status_enabled': 'gripper_status_enabled', 'armHomeDown': 'armHomeDown', 'armHomeUp': 'armHomeUp', 'armHomeAS': 'armHomeAS', 'pick_offset': 'pick_offset', 'pick_rotation': 'pick_rotation'})
 
-			# x:1536 y:74
+			# x:638 y:28
+			OperatableStateMachine.add('addPickOffsetPose',
+										AddOffsetToPoseState(),
+										transitions={'continue': 'computePick'},
+										autonomy={'continue': Autonomy.Off},
+										remapping={'input_pose': 'part_Pose', 'offset_pose': 'pick_offset_Pose', 'output_pose': 'part_Pose'})
+
+			# x:1421 y:237
 			OperatableStateMachine.add('checkGripperStatus',
 										GetGripperStatusState2(),
 										transitions={'continue': 'isPartAttached', 'fail': 'failed'},
@@ -91,23 +100,30 @@ class Move_UR10_PickSM(Behavior):
 										ComputeGraspAriacState(joint_names=joint_names),
 										transitions={'continue': 'moveToBackout', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'move_group': 'UR10_move_group', 'action_topic_namespace': 'UR10_action_topic_namespace', 'tool_link': 'UR10_tool_link', 'pose': 'part_Pose', 'offset': 'drop_offset', 'rotation': 'pick_rotation', 'joint_values': 'joint_values', 'joint_names': 'joint_names'})
+										remapping={'move_group': 'UR10_move_group', 'action_topic_namespace': 'UR10_action_topic_namespace', 'tool_link': 'UR10_tool_link', 'pose': 'part_Pose', 'offset': 'drop_offset', 'rotation': 'rotation', 'joint_values': 'joint_values', 'joint_names': 'joint_names'})
 
-			# x:679 y:24
+			# x:842 y:20
 			OperatableStateMachine.add('computePick',
 										ComputeGraspAriacState(joint_names=joint_names),
 										transitions={'continue': 'moveToPick', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'move_group': 'UR10_move_group', 'action_topic_namespace': 'UR10_action_topic_namespace', 'tool_link': 'UR10_tool_link', 'pose': 'part_Pose', 'offset': 'pick_offset', 'rotation': 'rotation', 'joint_values': 'joint_values', 'joint_names': 'joint_names'})
+										remapping={'move_group': 'UR10_move_group', 'action_topic_namespace': 'UR10_action_topic_namespace', 'tool_link': 'UR10_tool_link', 'pose': 'part_Pose', 'offset': 'offset', 'rotation': 'rotation', 'joint_values': 'joint_values', 'joint_names': 'joint_names'})
 
-			# x:1339 y:224
+			# x:474 y:29
+			OperatableStateMachine.add('creatPickOffsetPose',
+										CreateDropPoseState(),
+										transitions={'continue': 'addPickOffsetPose', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'xyz': 'pick_offset', 'rpy': 'pick_rotation', 'pose': 'pick_offset_Pose'})
+
+			# x:1144 y:338
 			OperatableStateMachine.add('createDecreasePick',
 										CreatePoseState(xyz=[0.0,0.0,-0.001], rpy=[0.0,0.0,0.0]),
 										transitions={'continue': 'addDecreasePose', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'pose': 'pose_Decrease'})
 
-			# x:1524 y:174
+			# x:1408 y:338
 			OperatableStateMachine.add('isPartAttached',
 										EqualState(),
 										transitions={'true': 'compute Backout', 'false': 'createDecreasePick'},
@@ -128,7 +144,7 @@ class Move_UR10_PickSM(Behavior):
 										autonomy={'reached': Autonomy.Off, 'planning_failed': Autonomy.Off, 'control_failed': Autonomy.Off},
 										remapping={'action_topic_namespace': 'UR10_action_topic_namespace', 'move_group': 'UR10_move_group', 'action_topic': 'UR10_action_topic', 'joint_values': 'joint_values', 'joint_names': 'joint_names'})
 
-			# x:921 y:24
+			# x:1071 y:19
 			OperatableStateMachine.add('moveToPick',
 										MoveitToJointsDynAriacState(),
 										transitions={'reached': 'setGripperOn', 'planning_failed': 'wait_9', 'control_failed': 'wait_9'},
@@ -138,11 +154,11 @@ class Move_UR10_PickSM(Behavior):
 			# x:284 y:24
 			OperatableStateMachine.add('moveToPrePick',
 										SrdfStateToMoveitAriac(),
-										transitions={'reached': 'computePick', 'planning_failed': 'wait', 'control_failed': 'wait', 'param_error': 'failed'},
+										transitions={'reached': 'creatPickOffsetPose', 'planning_failed': 'wait', 'control_failed': 'wait', 'param_error': 'failed'},
 										autonomy={'reached': Autonomy.Off, 'planning_failed': Autonomy.Off, 'control_failed': Autonomy.Off, 'param_error': Autonomy.Off},
-										remapping={'config_name': 'armHomeUp', 'move_group': 'UR10_move_group', 'action_topic_namespace': 'UR10_action_topic_namespace', 'action_topic': 'UR10_action_topic', 'robot_name': 'UR10_robot_name', 'config_name_out': 'config_name_out', 'move_group_out': 'move_group_out', 'robot_name_out': 'robot_name_out', 'action_topic_out': 'action_topic_out', 'joint_values': 'joint_values', 'joint_names': 'joint_names'})
+										remapping={'config_name': 'armHomeDown', 'move_group': 'UR10_move_group', 'action_topic_namespace': 'UR10_action_topic_namespace', 'action_topic': 'UR10_action_topic', 'robot_name': 'UR10_robot_name', 'config_name_out': 'config_name_out', 'move_group_out': 'move_group_out', 'robot_name_out': 'robot_name_out', 'action_topic_out': 'action_topic_out', 'joint_values': 'joint_values', 'joint_names': 'joint_names'})
 
-			# x:1174 y:24
+			# x:1387 y:45
 			OperatableStateMachine.add('setGripperOn',
 										VacuumGripperControlState2(enable=True),
 										transitions={'continue': 'wait_3', 'failed': 'failed'},
@@ -154,7 +170,7 @@ class Move_UR10_PickSM(Behavior):
 										transitions={'done': 'moveToPrePick'},
 										autonomy={'done': Autonomy.Off})
 
-			# x:1407 y:24
+			# x:1446 y:165
 			OperatableStateMachine.add('wait_3',
 										WaitState(wait_time=0.5),
 										transitions={'done': 'checkGripperStatus'},
@@ -166,7 +182,7 @@ class Move_UR10_PickSM(Behavior):
 										transitions={'done': 'moveBackToPick'},
 										autonomy={'done': Autonomy.Off})
 
-			# x:805 y:176
+			# x:1138 y:150
 			OperatableStateMachine.add('wait_9',
 										WaitState(wait_time=0.5),
 										transitions={'done': 'moveToPick'},
@@ -178,7 +194,7 @@ class Move_UR10_PickSM(Behavior):
 										transitions={'done': 'moveToBackout'},
 										autonomy={'done': Autonomy.Off})
 
-			# x:1031 y:172
+			# x:910 y:276
 			OperatableStateMachine.add('addDecreasePose',
 										AddOffsetToPoseState(),
 										transitions={'continue': 'computePick'},
