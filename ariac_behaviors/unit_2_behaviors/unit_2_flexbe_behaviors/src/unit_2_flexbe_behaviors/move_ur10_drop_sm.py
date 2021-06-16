@@ -111,7 +111,7 @@ class Move_UR10_DropSM(Behavior):
 
 			# x:1024 y:174
 			OperatableStateMachine.add('setGripperOff',
-										VacuumGripperControlState(enable=False),
+										VacuumGripperControlState(enable=False, gripper_service='/ariac/gantry/arm/gripper/controle'),
 										transitions={'continue': 'wait_3', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
@@ -141,7 +141,7 @@ class Move_UR10_DropSM(Behavior):
 
 			# x:1246 y:290
 			OperatableStateMachine.add('checkGripperStatus',
-										GetGripperStatusState(),
+										GetGripperStatusState(gripper_status_topic='/ariac/gantry/arm/gripper/state'),
 										transitions={'continue': 'partDettached', 'fail': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'fail': Autonomy.Off},
 										remapping={'enabled': 'gripper_enabled', 'attached': 'gripper_attached'})

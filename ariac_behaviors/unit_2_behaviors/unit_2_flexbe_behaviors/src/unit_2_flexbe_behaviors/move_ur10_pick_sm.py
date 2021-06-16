@@ -80,7 +80,7 @@ class Move_UR10_PickSM(Behavior):
 
 			# x:1536 y:74
 			OperatableStateMachine.add('checkGripperStatus',
-										GetGripperStatusState(),
+										GetGripperStatusState(gripper_status_topic='/ariac/gantry/arm/gripper/state'),
 										transitions={'continue': 'isPartAttached', 'fail': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'fail': Autonomy.Off},
 										remapping={'enabled': 'gripper_Enabled', 'attached': 'gripper_Attached'})
