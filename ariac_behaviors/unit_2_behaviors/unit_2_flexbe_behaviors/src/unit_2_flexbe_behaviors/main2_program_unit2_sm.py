@@ -100,13 +100,6 @@ class Main2_Program_unit2SM(Behavior):
 										autonomy={'reached': Autonomy.Off, 'planning_failed': Autonomy.Off, 'control_failed': Autonomy.Off, 'param_error': Autonomy.Off},
 										remapping={'config_name': 'AGV_Pose', 'move_group': 'move_group', 'action_topic_namespace': 'action_topic_namespace', 'action_topic': 'action_topic', 'robot_name': 'robot_name', 'config_name_out': 'config_name_out', 'move_group_out': 'move_group_out', 'robot_name_out': 'robot_name_out', 'action_topic_out': 'action_topic_out', 'joint_values': 'joint_values', 'joint_names': 'joint_names'})
 
-			# x:1299 y:249
-			OperatableStateMachine.add('moveToGantryAsAGV_2',
-										SrdfStateToMoveitAriac(),
-										transitions={'reached': 'Move_UR10_Drop', 'planning_failed': 'wait_3_2', 'control_failed': 'wait_3_2', 'param_error': 'failed'},
-										autonomy={'reached': Autonomy.Off, 'planning_failed': Autonomy.Off, 'control_failed': Autonomy.Off, 'param_error': Autonomy.Off},
-										remapping={'config_name': 'AGV_Pose', 'move_group': 'move_group', 'action_topic_namespace': 'action_topic_namespace', 'action_topic': 'action_topic', 'robot_name': 'robot_name', 'config_name_out': 'config_name_out', 'move_group_out': 'move_group_out', 'robot_name_out': 'robot_name_out', 'action_topic_out': 'action_topic_out', 'joint_values': 'joint_values', 'joint_names': 'joint_names'})
-
 			# x:869 y:36
 			OperatableStateMachine.add('moveToGantryAsHome',
 										SrdfStateToMoveitAriac(),
@@ -114,12 +107,12 @@ class Main2_Program_unit2SM(Behavior):
 										autonomy={'reached': Autonomy.Off, 'planning_failed': Autonomy.Off, 'control_failed': Autonomy.Off, 'param_error': Autonomy.Off},
 										remapping={'config_name': 'section_Pose', 'move_group': 'move_group', 'action_topic_namespace': 'action_topic_namespace', 'action_topic': 'action_topic', 'robot_name': 'robot_name', 'config_name_out': 'config_name_out', 'move_group_out': 'move_group_out', 'robot_name_out': 'robot_name_out', 'action_topic_out': 'action_topic_out', 'joint_values': 'joint_values', 'joint_names': 'joint_names'})
 
-			# x:1279 y:133
+			# x:1264 y:251
 			OperatableStateMachine.add('moveToGantryAsHome_2',
 										SrdfStateToMoveitAriac(),
-										transitions={'reached': 'moveToGantryAsAGV_2', 'planning_failed': 'wait_2_2', 'control_failed': 'wait_2_2', 'param_error': 'failed'},
+										transitions={'reached': 'Move_UR10_Drop', 'planning_failed': 'wait_2_2', 'control_failed': 'wait_2_2', 'param_error': 'failed'},
 										autonomy={'reached': Autonomy.Off, 'planning_failed': Autonomy.Off, 'control_failed': Autonomy.Off, 'param_error': Autonomy.Off},
-										remapping={'config_name': 'section_Pose', 'move_group': 'move_group', 'action_topic_namespace': 'action_topic_namespace', 'action_topic': 'action_topic', 'robot_name': 'robot_name', 'config_name_out': 'config_name_out', 'move_group_out': 'move_group_out', 'robot_name_out': 'robot_name_out', 'action_topic_out': 'action_topic_out', 'joint_values': 'joint_values', 'joint_names': 'joint_names'})
+										remapping={'config_name': 'table_Pose', 'move_group': 'move_group', 'action_topic_namespace': 'action_topic_namespace', 'action_topic': 'action_topic', 'robot_name': 'robot_name', 'config_name_out': 'config_name_out', 'move_group_out': 'move_group_out', 'robot_name_out': 'robot_name_out', 'action_topic_out': 'action_topic_out', 'joint_values': 'joint_values', 'joint_names': 'joint_names'})
 
 			# x:702 y:37
 			OperatableStateMachine.add('moveToGantrySection',
@@ -147,7 +140,7 @@ class Main2_Program_unit2SM(Behavior):
 										transitions={'done': 'moveToGantryAsHome'},
 										autonomy={'done': Autonomy.Off})
 
-			# x:1554 y:136
+			# x:1502 y:256
 			OperatableStateMachine.add('wait_2_2',
 										WaitState(wait_time=0.5),
 										transitions={'done': 'moveToGantryAsHome_2'},
@@ -157,12 +150,6 @@ class Main2_Program_unit2SM(Behavior):
 			OperatableStateMachine.add('wait_3',
 										WaitState(wait_time=0.5),
 										transitions={'done': 'moveToGantryAsAGV'},
-										autonomy={'done': Autonomy.Off})
-
-			# x:1534 y:257
-			OperatableStateMachine.add('wait_3_2',
-										WaitState(wait_time=0.5),
-										transitions={'done': 'moveToGantryAsAGV_2'},
 										autonomy={'done': Autonomy.Off})
 
 			# x:273 y:638
