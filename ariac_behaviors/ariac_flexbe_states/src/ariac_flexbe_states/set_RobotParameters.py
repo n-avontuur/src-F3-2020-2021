@@ -18,7 +18,8 @@ class set_Robot_Parameters(EventState):
 
 
 	def execute(self, userdata):
-		if userdata.part_Type == 'assembly_pomp_green' or userdata.part_Type == 'assembly_pomp_red' or userdata.part_Type == 'assembly_pomp_blue':
+		Logger.loginfo(userdata.part_Type)
+		if userdata.part_Type == 'assembly_pomp_green' or userdata.part_Type == 'assembly_pomp_red' or userdata.part_Type == 'assembly_pump_blue':
 			userdata.pick_offset = [0,0,0.075]
 			userdata.pick_rotation =[0.0,0.0,0.0]
 		elif userdata.part_Type == 'assembly_sensor_green' or userdata.part_Type == 'assembly_sensor_red' or userdata.part_Type == 'assembly_sensor_blue':

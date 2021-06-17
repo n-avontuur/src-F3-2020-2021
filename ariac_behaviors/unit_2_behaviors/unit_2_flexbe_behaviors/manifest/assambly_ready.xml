@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="assambly_ready">
+
+	<executable package_path="unit_2_flexbe_behaviors.assambly_ready_sm" class="assambly_readySM" />
+	<tagstring></tagstring>
+	<author>Niels Avontuur</author>
+	<date>Thu Jun 17 2021</date>
+	<description>
+		Behavoir for ready assambly
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

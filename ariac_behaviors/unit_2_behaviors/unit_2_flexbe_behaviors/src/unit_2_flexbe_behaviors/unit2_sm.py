@@ -27,15 +27,16 @@ from unit_2_flexbe_behaviors.setparameters_unit2_sm import setParameters_unit2SM
 Created on Wed Jun 16 2021
 @author: Niels Avontuur
 '''
-class Main2_Program_unit2SM(Behavior):
+class unit2SM(Behavior):
 	'''
-	Second main program with all the behaviors is state of state's
+	Unit2 program for integration of total project
+
 	'''
 
 
 	def __init__(self):
-		super(Main2_Program_unit2SM, self).__init__()
-		self.name = 'Main2_Program_unit2'
+		super(unit2SM, self).__init__()
+		self.name = 'unit2'
 
 		# parameters of this behavior
 

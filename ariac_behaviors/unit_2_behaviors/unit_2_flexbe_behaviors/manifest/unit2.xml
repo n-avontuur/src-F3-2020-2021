@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<behavior name="Main2_Program_unit2">
+<behavior name="unit2">
 
-	<executable package_path="unit_2_flexbe_behaviors.main2_program_unit2_sm" class="Main2_Program_unit2SM" />
+	<executable package_path="unit_2_flexbe_behaviors.unit2_sm" class="unit2SM" />
 	<tagstring></tagstring>
 	<author>Niels Avontuur</author>
 	<date>Wed Jun 16 2021</date>
 	<description>
-		Second main program with all the behaviors is state of state's
+		Unit2 program for integration of total project
+
 	</description>
 
 
