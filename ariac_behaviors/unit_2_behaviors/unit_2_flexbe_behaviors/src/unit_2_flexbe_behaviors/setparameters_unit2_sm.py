@@ -86,7 +86,7 @@ class setParameters_unit2SM(Behavior):
 			# x:599 y:74
 			OperatableStateMachine.add('getAssamblyOrder',
 										GetAssemblyShipmentFromOrderState(),
-										transitions={'continue': 'checkNumberOfAssembly', 'invalid_index': 'failed'},
+										transitions={'continue': 'checkNumberOfAssembly', 'invalid_index': 'checkNumberOfAssembly'},
 										autonomy={'continue': Autonomy.Off, 'invalid_index': Autonomy.Off},
 										remapping={'assembly_shipments': 'assembly_shipments', 'assembly_index': 'assembly_index', 'shipment_type': 'shipment_type', 'products': 'products', 'station_id': 'station_id', 'number_of_products': 'number_of_products'})
 
@@ -97,14 +97,14 @@ class setParameters_unit2SM(Behavior):
 										autonomy={'done': Autonomy.Off},
 										remapping={'value_a': 'assembly_index', 'value_b': 'one', 'result': 'assembly_index'})
 
-			# x:682 y:184
+			# x:719 y:224
 			OperatableStateMachine.add('assembly_ready',
 										self.use_behavior(assambly_readySM, 'assembly_ready'),
 										transitions={'finished': 'assemblyCompleet', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
 										remapping={'station_id': 'station_id', 'shipment_type': 'shipment_type', 'success': 'success', 'inspection_result': 'inspection_result'})
 
-			# x:974 y:174
+			# x:1070 y:217
 			OperatableStateMachine.add('checkNumberOfAssembly',
 										EqualState(),
 										transitions={'true': 'assembly_ready', 'false': 'checkNumberOfPart'},
@@ -146,7 +146,7 @@ class setParameters_unit2SM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'invalid_index': Autonomy.Off},
 										remapping={'products': 'products', 'index': 'product_index', 'type': 'part_Type', 'pose': 'assambly_Pose'})
 
-			# x:974 y:74
+			# x:1047 y:60
 			OperatableStateMachine.add('replacePartIndex',
 										ReplaceState(),
 										transitions={'done': 'getAssamblyOrder'},

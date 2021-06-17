@@ -58,7 +58,7 @@ class Move_UR10_DropSM(Behavior):
 		_state_machine.userdata.falseVariable = False
 		_state_machine.userdata.trueVariable = True
 		_state_machine.userdata.drop_Pose = []
-		_state_machine.userdata.offset = 0.1
+		_state_machine.userdata.offset = 0.2
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -74,14 +74,14 @@ class Move_UR10_DropSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'part_Type': 'part_Type', 'UR10_move_group': 'UR10_move_group', 'UR10_action_topic_namespace': 'UR10_action_topic_namespace', 'UR10_action_topic': 'UR10_action_topic', 'UR10_tool_link': 'UR10_tool_link', 'UR10_robot_name': 'UR10_robot_name', 'gripper_service': 'gripper_service', 'gripper_status_topic': 'gripper_status_topic', 'gripper_status_attached': 'gripper_status_attached', 'gripper_status_enabled': 'gripper_status_enabled', 'armHomeDown': 'armHomeDown', 'armHomeUp': 'armHomeUp', 'armHomeAS': 'armHomeAS', 'pick_offset': 'part_offset', 'pick_rotation': 'part_rotation'})
 
-			# x:1196 y:539
+			# x:979 y:324
 			OperatableStateMachine.add('computeDrop',
 										ComputeGraspAriacState(joint_names=joint_names),
 										transitions={'continue': 'moveToDrop', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'move_group': 'UR10_move_group', 'action_topic_namespace': 'UR10_action_topic_namespace', 'tool_link': 'UR10_tool_link', 'pose': 'drop_Pose', 'offset': 'drop_Offset', 'rotation': 'drop_Rotation', 'joint_values': 'joint_values', 'joint_names': 'joint_names'})
 
-			# x:1186 y:296
+			# x:679 y:124
 			OperatableStateMachine.add('computeDrop_2',
 										ComputeGraspAriacState(joint_names=joint_names),
 										transitions={'continue': 'moveToDrop_2', 'failed': 'failed'},
@@ -95,7 +95,7 @@ class Move_UR10_DropSM(Behavior):
 										autonomy={'reached': Autonomy.Off, 'planning_failed': Autonomy.Off, 'control_failed': Autonomy.Off},
 										remapping={'action_topic_namespace': 'UR10_action_topic_namespace', 'move_group': 'UR10_move_group', 'action_topic': 'UR10_action_topic', 'joint_values': 'joint_values', 'joint_names': 'joint_names'})
 
-			# x:1176 y:423
+			# x:971 y:124
 			OperatableStateMachine.add('moveToDrop_2',
 										MoveitToJointsDynAriacState(),
 										transitions={'reached': 'computeDrop', 'planning_failed': 'wait_2_2', 'control_failed': 'wait_2_2'},
@@ -109,7 +109,7 @@ class Move_UR10_DropSM(Behavior):
 										autonomy={'reached': Autonomy.Off, 'planning_failed': Autonomy.Off, 'control_failed': Autonomy.Off},
 										remapping={'action_topic_namespace': 'UR10_action_topic_namespace', 'move_group': 'UR10_move_group', 'action_topic': 'UR10_action_topic', 'joint_values': 'joint_values', 'joint_names': 'joint_names'})
 
-			# x:446 y:124
+			# x:484 y:124
 			OperatableStateMachine.add('moveToPreDrop',
 										SrdfStateToMoveitAriac(),
 										transitions={'reached': 'computeDrop_2', 'planning_failed': 'wait', 'control_failed': 'wait', 'param_error': 'failed'},
@@ -129,7 +129,7 @@ class Move_UR10_DropSM(Behavior):
 										transitions={'continue': 'wait_3', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
-			# x:477 y:28
+			# x:507 y:24
 			OperatableStateMachine.add('wait',
 										WaitState(wait_time=0.5),
 										transitions={'done': 'moveToPreDrop'},
@@ -141,7 +141,7 @@ class Move_UR10_DropSM(Behavior):
 										transitions={'done': 'moveToDrop'},
 										autonomy={'done': Autonomy.Off})
 
-			# x:1414 y:424
+			# x:1007 y:24
 			OperatableStateMachine.add('wait_2_2',
 										WaitState(wait_time=0.5),
 										transitions={'done': 'moveToDrop_2'},

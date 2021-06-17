@@ -63,6 +63,8 @@ class AddNumericState(EventState):
 		# Main purpose is to check state conditions and trigger a corresponding outcome.
 		# If no outcome is returned, the state will stay active.
      		userdata.result = userdata.value_a + userdata.value_b
+		Logger.loginfo('result :')
+		Logger.loginfo(str(userdata.result))
 
 		return 'done'
 
