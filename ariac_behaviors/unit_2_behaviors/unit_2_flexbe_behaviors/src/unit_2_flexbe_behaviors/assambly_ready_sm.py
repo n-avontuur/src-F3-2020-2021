@@ -9,7 +9,6 @@
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from ariac_flexbe_states.notify_assembly_ready_state import NotifyAssemblyReadyState
-from ariac_support_flexbe_states.replace_state import ReplaceState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -41,6 +40,9 @@ class assambly_readySM(Behavior):
 
 		# Behavior comments:
 
+		# ! 67 29 
+		# Made by Niels Avontuur
+
 
 
 	def create(self):
@@ -63,16 +65,9 @@ class assambly_readySM(Behavior):
 			# x:169 y:127
 			OperatableStateMachine.add('notifyAssamblyReady',
 										NotifyAssemblyReadyState(),
-										transitions={'continue': 'setAssembly_indexZero', 'fail': 'failed'},
+										transitions={'continue': 'finished', 'fail': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'fail': Autonomy.Off},
 										remapping={'as_id': 'station_id', 'shipment_type': 'shipment_type', 'success': 'success', 'inspection_result': 'inspection_result'})
-
-			# x:443 y:119
-			OperatableStateMachine.add('setAssembly_indexZero',
-										ReplaceState(),
-										transitions={'done': 'finished'},
-										autonomy={'done': Autonomy.Off},
-										remapping={'value': 'zero', 'result': 'assembly_index'})
 
 
 		return _state_machine

@@ -51,6 +51,9 @@ class setParameters_unit2SM(Behavior):
 
 		# Behavior comments:
 
+		# ! 41 30 
+		# Made by Niels Avontuur
+
 
 
 	def create(self):
@@ -83,7 +86,7 @@ class setParameters_unit2SM(Behavior):
 
 
 		with _state_machine:
-			# x:599 y:74
+			# x:49 y:71
 			OperatableStateMachine.add('getAssamblyOrder',
 										GetAssemblyShipmentFromOrderState(),
 										transitions={'continue': 'checkNumberOfAssembly', 'invalid_index': 'checkNumberOfAssembly'},
@@ -97,14 +100,14 @@ class setParameters_unit2SM(Behavior):
 										autonomy={'done': Autonomy.Off},
 										remapping={'value_a': 'assembly_index', 'value_b': 'one', 'result': 'assembly_index'})
 
-			# x:719 y:224
+			# x:362 y:221
 			OperatableStateMachine.add('assemblyOrder_ready',
 										self.use_behavior(assambly_readySM, 'assemblyOrder_ready'),
 										transitions={'finished': 'assemblyCompleet', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
-										remapping={'station_id': 'station_id', 'shipment_type': 'shipment_type', 'success': 'success', 'inspection_result': 'inspection_result'})
+										remapping={'station_id': 'station_id', 'shipment_type': 'shipment_type', 'assembly_index': 'assembly_index', 'success': 'success', 'inspection_result': 'inspection_result'})
 
-			# x:1070 y:217
+			# x:724 y:224
 			OperatableStateMachine.add('checkNumberOfAssembly',
 										EqualState(),
 										transitions={'true': 'assemblyOrder_ready', 'false': 'checkNumberOfPart'},
@@ -146,7 +149,7 @@ class setParameters_unit2SM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'invalid_index': Autonomy.Off},
 										remapping={'products': 'products', 'index': 'product_index', 'type': 'part_Type', 'pose': 'assambly_Pose'})
 
-			# x:1047 y:60
+			# x:724 y:74
 			OperatableStateMachine.add('replacePartIndex',
 										ReplaceState(),
 										transitions={'done': 'getAssamblyOrder'},

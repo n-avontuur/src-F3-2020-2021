@@ -53,6 +53,9 @@ class Move_UR10_PickSM(Behavior):
 		# ! 1654 8 
 		# Made by Niels Avontuur
 
+		# ! 40 30 
+		# Made by Niels Avontuur
+
 
 
 	def create(self):
@@ -74,7 +77,7 @@ class Move_UR10_PickSM(Behavior):
 
 
 		with _state_machine:
-			# x:85 y:24
+			# x:86 y:87
 			OperatableStateMachine.add('setRobotParameters',
 										set_Robot_Parameters(),
 										transitions={'continue': 'moveToPrePick', 'failed': 'failed'},
