@@ -23,10 +23,10 @@ class set_Robot_Parameters(EventState):
 			userdata.pick_offset = [0,0,0.07]
 			userdata.pick_rotation =[0.0,0.0,0.0]
 		elif userdata.part_Type == 'assembly_sensor_green' or userdata.part_Type == 'assembly_sensor_red' or userdata.part_Type == 'assembly_sensor_blue':
-			userdata.pick_offset = [0.0,0.0,0.06]
+			userdata.pick_offset = [0.0,0.0,0.058]
 			userdata.pick_rotation = [0.0,0.0,0.0]
 		elif userdata.part_Type == 'assembly_regulator_green' or userdata.part_Type == 'assembly_regulator_red' or userdata.part_Type == 'assembly_regulator_blue':
-			userdata.pick_offset = [0.0,0.0,0.06]
+			userdata.pick_offset = [0.0,0.0,0.056]
 			userdata.pick_rotation = [0.0,0.0,0.0]
 		elif userdata.part_Type == 'assembly_battery_green' or userdata.part_Type == 'assembly_battery_red' or userdata.part_Type == 'assembly_battery_blue':
 			userdata.pick_offset = [0.0,0.0,0.045]

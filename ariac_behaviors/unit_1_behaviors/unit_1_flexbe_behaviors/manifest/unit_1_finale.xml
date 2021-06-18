@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="unit_1_FINALE">
+
+	<executable package_path="unit_1_flexbe_behaviors.unit_1_finale_sm" class="unit_1_FINALESM" />
+	<tagstring></tagstring>
+	<author>kemal buke</author>
+	<date>Sun Jun 13 2021</date>
+	<description>
+		unit 1 fase 3
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="agv selection" />
+	<contains name="notify_shipment_ready" />
+	<contains name="pick_part_from_bin" />
+	<contains name="place_part_on_agv" />
+
+	<!-- Available Parameters -->
+
+</behavior>

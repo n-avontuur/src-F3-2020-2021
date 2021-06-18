@@ -44,7 +44,7 @@ import tf2_geometry_msgs
 
 from flexbe_core import EventState, Logger
 from geometry_msgs.msg import Pose, PoseStamped
-from nist_gear.msg import LogicalCameraImage, Model
+from osrf_gear.msg import LogicalCameraImage, Model
 from flexbe_core.proxy import ProxySubscriberCached
 
 '''

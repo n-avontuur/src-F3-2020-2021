@@ -37,8 +37,6 @@
 import rospy
 import sensor_msgs
 
-import numpy as np
-
 from flexbe_core import EventState, Logger
 from flexbe_core.proxy import ProxyServiceCaller
 from geometry_msgs.msg import PoseStamped, Pose
@@ -54,7 +52,6 @@ import moveit_msgs.msg
 from tf.transformations import *
 
 import geometry_msgs
-import geometry_msgs.msg
 import tf2_ros
 import tf2_geometry_msgs
 import actionlib
@@ -76,7 +73,7 @@ class ComputeGraspAriacState(EventState):
 	># offset		float		Some offset
 	># rotation		float		Rotation?
 	># move_group       	string		Name of the group for which to compute the joint values for grasping.
-        ># action_topic_namespace    string          Name of the prefix of the move group to be used for planning.
+        ># action_topic_namespace    string          Name of the namespace of the move group to be used for planning.
 	># tool_link		string		e.g. "ee_link"
 	># pose			PoseStamped	pose of the part to pick
 	#> joint_values		float[]		joint values for grasping
@@ -92,7 +89,7 @@ class ComputeGraspAriacState(EventState):
 
 		self._joint_names = joint_names
 
-		self._failed = True
+
 		# tf to transfor the object pose
 		self._tf_buffer = tf2_ros.Buffer(rospy.Duration(10.0)) #tf buffer length
 		self._tf_listener = tf2_ros.TransformListener(self._tf_buffer)
@@ -103,7 +100,7 @@ class ComputeGraspAriacState(EventState):
 		# Main purpose is to check state conditions and trigger a corresponding outcome.
 		# If no outcome is returned, the state will stay active.
 
-		#rospy.logwarn(userdata.pose)
+		rospy.logwarn(userdata.pose)
 
 		if self._failed == True:
 			return 'failed'
@@ -112,17 +109,15 @@ class ComputeGraspAriacState(EventState):
 			sol_js = self._srv_result.solution.joint_state
 
 			joint_names = self._joint_names
+			#['robot1_shoulder_pan_joint', 'robot1_shoulder_lift_joint', 'robot1_elbow_joint', 'robot1_wrist_1_joint', 'robot1_wrist_2_joint', 'robot1_wrist_3_joint']  # TODO: this needs to be a parameter
 
 			jname_idx = [sol_js.name.index(jname) for jname in joint_names]
 			j_angles = map(sol_js.position.__getitem__, jname_idx)
 			# solution_dict = dict(zip(joint_names, j_angles))
 			userdata.joint_values = copy.deepcopy(j_angles)
 			userdata.joint_names = copy.deepcopy(joint_names)
-			rospy.logerr(userdata.joint_names)
-			rospy.logerr(userdata.joint_values)
 			return 'continue'
 		else:
-			rospy.logerr(self._srv_result)
 			rospy.loginfo("ComputeGraspState::Execute state - failed.  Returned: %d", int(self._srv_result.error_code.val) )
 			return 'failed'
 
@@ -131,7 +126,7 @@ class ComputeGraspAriacState(EventState):
 		# It is primarily used to start actions which are associated with this state.
 
 		self._move_group = userdata.move_group
-		self._namespace = userdata.action_topic_namespace
+		self._action_topic_namespace = userdata.action_topic_namespace
 		self._tool_link = userdata.tool_link
 
 		self._offset = userdata.offset
@@ -141,21 +136,15 @@ class ComputeGraspAriacState(EventState):
 		self._ik_srv = ProxyServiceCaller({self._srv_name: GetPositionIK})
 
 		self._robot1_client = actionlib.SimpleActionClient(userdata.action_topic_namespace + '/execute_trajectory', moveit_msgs.msg.ExecuteTrajectoryAction)
-		server_up = self._robot1_client.wait_for_server(rospy.Duration(10.0))
-		if not server_up:
-			rospy.loginfo('Execute Trajectory server is not available for robot')
-			self._failed = True
-			return
+		self._robot1_client.wait_for_server()
 		rospy.loginfo('Execute Trajectory server is available for robot')
+
 
 		# Get transform between camera and robot1_base
 		while True:
 			rospy.sleep(0.1)
 			try:
-				#rospy.loginfo('x')				
-				target_pose = self._tf_buffer.transform(userdata.pose, "world") #"linear_arm_actuator")#"world")
-				rospy.loginfo('target pose :')
-				rospy.loginfo(target_pose)
+				target_pose = self._tf_buffer.transform(userdata.pose, "world")
 				break
 			except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
 				rospy.logerr("ComputeGraspState::on_enter - Failed to transform to world")
@@ -166,90 +155,22 @@ class ComputeGraspAriacState(EventState):
 
 
 		# rotate the object pose 180 degrees around - now works with -90???
-		q_orig = [target_pose.pose.orientation.x, target_pose.pose.orientation.y, target_pose.pose.orientation.z, target_pose.pose.orientation.w]
 
-
-		test_flag = False
-			
-		if not test_flag:
-			q_orig = [0, 0, 0, 1] # deze moet uiteindelijk weg
-			#q_rot = quaternion_from_euler(self._rotation, math.pi/2.0, 0) # math.pi/2.0 added by gerard en werkt !!
-			#q_rot = quaternion_from_euler(math.pi/2.0, 0, math.pi/-2.0)
-			q_rot = quaternion_from_euler(0, math.pi/2.0, math.pi/2.0)
-			#q_rot = quaternion_from_euler(0, 0, 0)
-			res_q = quaternion_multiply(q_rot, q_orig)
-
-		else:
-			rospy.logerr('testing')
-			break_flag = False
-			for x in np.arange(-math.pi*2.0, math.pi*2.0, 0.1):
-				#rospy.logerr(x)
-				for y in np.arange(-math.pi*2.0, math.pi*2.0, 0.1):
-					for z in np.arange(-math.pi*2.0, math.pi*2.0, 0.1):
-						#rospy.logerr(y)
-						q_rot = quaternion_from_euler(x, y, z)
-						q_rotb = quaternion_from_euler(x, y, z)
-						res_q = quaternion_multiply(q_rot, q_orig)
-						'''
-						if res_q[0] > -0.05 and res_q[0] < 0.05 and \
-							res_q[1] > 0.705 and res_q[1] < 0.71 and \
-							res_q[2] > -0.05 and res_q[2] < 0.05 and \
-							res_q[3] > 0.705 and res_q[3] < 0.71:
-							rospy.logerr('solution found 1')
-							rospy.logerr(res_q)
-							break_flag = True
-							break
-						'''
-						(roll, pitch, yaw) = euler_from_quaternion(res_q)
-						if pitch > 1.56 and pitch < 1.58 and \
-							yaw > -0.05 and yaw < 0.05 and \
-							roll > -0.05 and roll < 0.05:
-							rospy.logerr('solution found')							
-							rospy.logerr(pitch)
-							rospy.logerr(jaw)
-							rospy.logerr(roll)
-							break_flag = True
-							break
-					if break_flag:
-						break
-				if break_flag:
-					break
-					
-		if 0 :		
-
-			rospy.logerr('q_orig')
-			rospy.logerr(q_orig)
-			rospy.logerr(euler_from_quaternion(q_orig))
-
-			rospy.logerr('q_rot')
-			rospy.logerr(q_rot)
-			rospy.logerr(euler_from_quaternion(q_rot))
-			rospy.logerr('res_q')
-			rospy.logerr(res_q)
-			rospy.logerr(euler_from_quaternion(res_q))
-			
-			#rospy.logerr(euler_from_quaternion(q_rotb))
-			#rospy.logerr(x)
-			#rospy.logerr(y)
-			#rospy.logerr(z)
-			
-			rospy.logerr(res_q)
-			rospy.logerr(euler_from_quaternion(res_q))
-		
+		#q_orig = [target_pose.pose.orientation.x, target_pose.pose.orientation.y, target_pose.pose.orientation.z, target_pose.pose.orientation.w]
+		q_orig = [0, 0, 0, 1]
+		#q_rot = quaternion_from_euler(self._rotation, 0, 0)
+		q_rot = quaternion_from_euler(self._rotation, math.pi/2.0, 0) # math.pi/2.0 added by gerard!!
+		#q_rot = quaternion_from_euler(math.pi/-2.0, 0, 0)
+		res_q = quaternion_multiply(q_rot, q_orig)
 		target_pose.pose.orientation = geometry_msgs.msg.Quaternion(*res_q)
-				
+
 		# use ik service to compute joint_values
 		self._srv_req = GetPositionIKRequest()
-		#rospy.logerr(self._move_group)
-		#rospy.logerr(self._namespace + '/joint_states')
 		self._srv_req.ik_request.group_name = self._move_group 
-		self._srv_req.ik_request.robot_state.joint_state = rospy.wait_for_message(self._namespace + '/joint_states', sensor_msgs.msg.JointState)
-
-		#self._srv_req.ik_request.robot_state.joint_state = rospy.wait_for_message('ariac/joint_states', sensor_msgs.msg.JointState)
-		#rospy.logerr(self._tool_link)
+		self._srv_req.ik_request.robot_state.joint_state = rospy.wait_for_message(self._action_topic_namespace + '/joint_states', sensor_msgs.msg.JointState)
 		self._srv_req.ik_request.ik_link_name = self._tool_link  # TODO: this needs to be a parameter
 		self._srv_req.ik_request.pose_stamped = target_pose
-		self._srv_req.ik_request.avoid_collisions = False
+		self._srv_req.ik_request.avoid_collisions = True
 		self._srv_req.ik_request.attempts = 500
 		try:
 			self._srv_result = self._ik_srv.call(self._srv_name, self._srv_req)

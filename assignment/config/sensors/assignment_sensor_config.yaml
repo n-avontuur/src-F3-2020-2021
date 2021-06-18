@@ -1,4 +1,14 @@
 sensors:
+  logical_camera_bin_1_2:
+    type: logical_camera
+    pose:
+      xyz: [-2.29, 3, 1.6]
+      rpy: [1.570797, 1.570792, 1.570796]
+  logical_camera_bin_3_4:
+    type: logical_camera
+    pose:
+      xyz: [-2.29, -3, 1.6]
+      rpy: [1.570797, 1.570792, 1.570796]
   logical_camera_station1_agv1:
     type: logical_camera
     pose:

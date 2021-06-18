@@ -41,7 +41,7 @@ import inspect
 
 from flexbe_core import EventState, Logger
 from flexbe_core.proxy import ProxySubscriberCached
-from nist_gear.msg import Proximity
+from osrf_gear.msg import Proximity
 '''
 
 Created on Jan 22, 2021

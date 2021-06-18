@@ -19,7 +19,7 @@ class MoveitToJointsDynAriacState(EventState):
 
 	># move_group		string		Name of the move group to be used for planning.
 
-	># namespace	string		Name of the prefix of the move group to be used for planning.
+	># action_topic_namespace	string		Name of the namespace of the move group to be used for planning.
 									Specified joint names need to exist in the given group.
 	># action_topic 	string 		Topic on which MoveIt is listening for action calls.
 

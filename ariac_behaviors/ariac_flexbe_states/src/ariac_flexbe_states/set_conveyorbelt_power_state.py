@@ -4,7 +4,7 @@ import sys
 import rospy
 
 from flexbe_core import EventState, Logger
-from nist_gear.srv import ConveyorBeltControl, ConveyorBeltControlRequest, ConveyorBeltControlResponse
+from osrf_gear.srv import ConveyorBeltControl, ConveyorBeltControlRequest, ConveyorBeltControlResponse
 
 
 class SetConveyorbeltPowerState(EventState):

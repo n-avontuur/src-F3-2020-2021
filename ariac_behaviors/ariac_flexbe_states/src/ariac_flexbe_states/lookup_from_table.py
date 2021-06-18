@@ -86,7 +86,7 @@ class LookupFromTableState(EventState):
                                 for column in index_column.iter(self._column_title):
                                     #Logger.logwarn(column.attrib['value'])
                                     userdata.column_value = column.attrib['value']
-                                    braek_flag = True
+                                    break_flag = True
                                     break
                             if break_flag:
                                 break

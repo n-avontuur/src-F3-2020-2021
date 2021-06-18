@@ -9,6 +9,7 @@
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from ariac_flexbe_states.notify_assembly_ready_state import NotifyAssemblyReadyState
+from ariac_support_flexbe_states.replace_state import ReplaceState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -43,12 +44,14 @@ class assambly_readySM(Behavior):
 
 
 	def create(self):
-		# x:549 y:133, x:524 y:413
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['station_id', 'shipment_type'], output_keys=['success', 'inspection_result'])
+		# x:742 y:122, x:524 y:413
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['station_id', 'shipment_type', 'assembly_index'], output_keys=['success', 'inspection_result', 'assembly_index'])
 		_state_machine.userdata.station_id = ''
 		_state_machine.userdata.shipment_type = ''
 		_state_machine.userdata.success = 0
 		_state_machine.userdata.inspection_result = 0
+		_state_machine.userdata.assembly_index = 0
+		_state_machine.userdata.zero = 0
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -60,9 +63,16 @@ class assambly_readySM(Behavior):
 			# x:169 y:127
 			OperatableStateMachine.add('notifyAssamblyReady',
 										NotifyAssemblyReadyState(),
-										transitions={'continue': 'finished', 'fail': 'failed'},
+										transitions={'continue': 'setAssembly_indexZero', 'fail': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'fail': Autonomy.Off},
 										remapping={'as_id': 'station_id', 'shipment_type': 'shipment_type', 'success': 'success', 'inspection_result': 'inspection_result'})
+
+			# x:443 y:119
+			OperatableStateMachine.add('setAssembly_indexZero',
+										ReplaceState(),
+										transitions={'done': 'finished'},
+										autonomy={'done': Autonomy.Off},
+										remapping={'value': 'zero', 'result': 'assembly_index'})
 
 
 		return _state_machine

@@ -42,7 +42,7 @@ class setParameters_unit2SM(Behavior):
 		# parameters of this behavior
 
 		# references to used behaviors
-		self.add_behavior(assambly_readySM, 'assembly_ready')
+		self.add_behavior(assambly_readySM, 'assemblyOrder_ready')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -98,8 +98,8 @@ class setParameters_unit2SM(Behavior):
 										remapping={'value_a': 'assembly_index', 'value_b': 'one', 'result': 'assembly_index'})
 
 			# x:719 y:224
-			OperatableStateMachine.add('assembly_ready',
-										self.use_behavior(assambly_readySM, 'assembly_ready'),
+			OperatableStateMachine.add('assemblyOrder_ready',
+										self.use_behavior(assambly_readySM, 'assemblyOrder_ready'),
 										transitions={'finished': 'assemblyCompleet', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
 										remapping={'station_id': 'station_id', 'shipment_type': 'shipment_type', 'success': 'success', 'inspection_result': 'inspection_result'})
@@ -107,7 +107,7 @@ class setParameters_unit2SM(Behavior):
 			# x:1070 y:217
 			OperatableStateMachine.add('checkNumberOfAssembly',
 										EqualState(),
-										transitions={'true': 'assembly_ready', 'false': 'checkNumberOfPart'},
+										transitions={'true': 'assemblyOrder_ready', 'false': 'checkNumberOfPart'},
 										autonomy={'true': Autonomy.Off, 'false': Autonomy.Off},
 										remapping={'value_a': 'assembly_index', 'value_b': 'number_of_assembly_shipments'})
 

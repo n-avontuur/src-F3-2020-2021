@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="unit2_FINAL">
+
+	<executable package_path="unit_2_flexbe_behaviors.unit2_final_sm" class="unit2_FINALSM" />
+	<tagstring></tagstring>
+	<author>Niels Avontuur</author>
+	<date>Wed Jun 16 2021</date>
+	<description>
+		Unit 2 main program
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="setParameters_unit2" />
+	<contains name="Move_UR10_Drop" />
+	<contains name="Move_UR10_Pick" />
+	<contains name="Home_UR10" />
+
+	<!-- Available Parameters -->
+
+</behavior>

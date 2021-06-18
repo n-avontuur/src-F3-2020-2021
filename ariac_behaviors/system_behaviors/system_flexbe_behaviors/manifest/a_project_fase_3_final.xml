@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="A.Project_Fase_3_Final">
+
+	<executable package_path="system_flexbe_behaviors.a_project_fase_3_final_sm" class="AProject_Fase_3_FinalSM" />
+	<tagstring></tagstring>
+	<author>Niels Avontuur</author>
+	<date>Fri Jun 18 2021</date>
+	<description>
+		This is the total program for fase 3 project
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="unit2_FINAL" />
+	<contains name="unit_1_FINALE" />
+
+	<!-- Available Parameters -->
+
+</behavior>

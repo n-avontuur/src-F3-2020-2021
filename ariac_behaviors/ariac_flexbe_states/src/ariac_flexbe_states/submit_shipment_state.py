@@ -4,13 +4,14 @@ import sys
 import rospy
 
 from flexbe_core import EventState, Logger
-from nist_gear.srv import SubmitShipment, SubmitShipmentRequest, SubmitShipmentResponse
+from osrf_gear.srv import SubmitShipment, SubmitShipmentRequest, SubmitShipmentResponse
 
 
 class SubmitShipmentState(EventState):
 	'''
 	This state submits the shipment
 
+	># agv_id 		string 	agv_id: agv1 or agv2 to select the desired agv
 	># shipment_type	string	Id of the order
 
 	#> inspection_result	float32	Resuslt of the inspection
@@ -22,7 +23,7 @@ class SubmitShipmentState(EventState):
 
 	def __init__(self):
 		# Declare outcomes, input_keys, and output_keys by calling the super constructor with the corresponding arguments.
-		super(SubmitShipmentState, self).__init__(outcomes = ['continue', 'fail'], input_keys = ['shipment_type'], output_keys =['inspection_result'])
+		super(SubmitShipmentState, self).__init__(outcomes = ['continue', 'fail'], input_keys = ['agv_id', 'shipment_type'], output_keys =['inspection_result'])
 
 		# initialize service proxy
 		rospy.wait_for_service('/ariac/submit_shipment')
@@ -34,6 +35,14 @@ class SubmitShipmentState(EventState):
 		# Main purpose is to check state conditions and trigger a corresponding outcome.
 		# If no outcome is returned, the state will stay active.
 		request = SubmitShipmentRequest()
+		if userdata.agv_id = 'agv1':
+			request.destination_id = '1'
+		else:
+			if userdata.agv_id = 'agv2':
+				request.destination_id = '2'
+
+			else:
+				return 'fail'
 
 		request.shipment_type = userdata.shipment_type
 		try:

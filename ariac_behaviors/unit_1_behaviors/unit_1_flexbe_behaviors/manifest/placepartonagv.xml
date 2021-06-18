@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="PlacePartOnAGV">
+
+	<executable package_path="unit_1_flexbe_behaviors.placepartonagv_sm" class="PlacePartOnAGVSM" />
+	<tagstring></tagstring>
+	<author>Jesse</author>
+	<date>Tue Jun 01 2021</date>
+	<description>
+		Part van bin naar AGV verplaatsen
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

@@ -147,7 +147,7 @@ class Move_UR10_PickSM(Behavior):
 			# x:1071 y:19
 			OperatableStateMachine.add('moveToPick',
 										MoveitToJointsDynAriacState(),
-										transitions={'reached': 'setGripperOn', 'planning_failed': 'wait_9', 'control_failed': 'wait_9'},
+										transitions={'reached': 'setGripperOn', 'planning_failed': 'setGripperOn', 'control_failed': 'wait_9'},
 										autonomy={'reached': Autonomy.Off, 'planning_failed': Autonomy.Off, 'control_failed': Autonomy.Off},
 										remapping={'action_topic_namespace': 'UR10_action_topic_namespace', 'move_group': 'UR10_move_group', 'action_topic': 'UR10_action_topic', 'joint_values': 'joint_values', 'joint_names': 'joint_names'})
 
