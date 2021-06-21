@@ -56,8 +56,8 @@ class unit2_FINALSM(Behavior):
 
 
 	def create(self):
-		# x:833 y:40, x:636 y:305
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['number_of_assembly_shipments', 'assembly_shipments'])
+		# x:833 y:40, x:636 y:305, x:262 y:162
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'part_assembly'], input_keys=['number_of_assembly_shipments', 'assembly_shipments'])
 		_state_machine.userdata.product_index = 0
 		_state_machine.userdata.oneVariable = 1
 		_state_machine.userdata.number_of_assembly_shipments = 0
@@ -129,7 +129,7 @@ class unit2_FINALSM(Behavior):
 			# x:178 y:374
 			OperatableStateMachine.add('moveToGantrySection_2',
 										SrdfStateToMoveitAriac(),
-										transitions={'reached': 'setParameters_unit2', 'planning_failed': 'wait_4', 'control_failed': 'wait_4', 'param_error': 'failed'},
+										transitions={'reached': 'part_assembly', 'planning_failed': 'wait_4', 'control_failed': 'wait_4', 'param_error': 'failed'},
 										autonomy={'reached': Autonomy.Off, 'planning_failed': Autonomy.Off, 'control_failed': Autonomy.Off, 'param_error': Autonomy.Off},
 										remapping={'config_name': 'section_Pose', 'move_group': 'move_group', 'action_topic_namespace': 'action_topic_namespace', 'action_topic': 'action_topic', 'robot_name': 'robot_name', 'config_name_out': 'config_name_out', 'move_group_out': 'move_group_out', 'robot_name_out': 'robot_name_out', 'action_topic_out': 'action_topic_out', 'joint_values': 'joint_values', 'joint_names': 'joint_names'})
 
@@ -157,7 +157,7 @@ class unit2_FINALSM(Behavior):
 										transitions={'done': 'moveToGantryAsAGV'},
 										autonomy={'done': Autonomy.Off})
 
-			# x:207 y:274
+			# x:36 y:365
 			OperatableStateMachine.add('wait_4',
 										WaitState(wait_time=0.5),
 										transitions={'done': 'moveToGantrySection_2'},

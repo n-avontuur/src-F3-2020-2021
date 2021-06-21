@@ -12,6 +12,7 @@ from ariac_flexbe_states.end_assignment_state import EndAssignment
 from ariac_flexbe_states.start_assignment_state import StartAssignment
 from ariac_logistics_flexbe_states.get_order_state import GetOrderState
 from ariac_support_flexbe_states.replace_state import ReplaceState
+from flexbe_states.wait_state import WaitState
 from unit_1_flexbe_behaviors.unit_1_finale_sm import unit_1_FINALESM
 from unit_2_flexbe_behaviors.unit2_final_sm import unit2_FINALSM
 # Additional imports can be added inside the following tags
@@ -50,7 +51,7 @@ class AProject_Fase_3_FinalSM(Behavior):
 
 
 	def create(self):
-		# x:333 y:490, x:1333 y:240
+		# x:354 y:568, x:1333 y:240
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 		_state_machine.userdata.kitting_index = 0
 		_state_machine.userdata.zero = 0
@@ -89,11 +90,11 @@ class AProject_Fase_3_FinalSM(Behavior):
 										autonomy={'done': Autonomy.Off},
 										remapping={'value': 'zero', 'result': 'kitting_index'})
 
-			# x:920 y:471
+			# x:908 y:570
 			OperatableStateMachine.add('unit2_FINAL',
 										self.use_behavior(unit2_FINALSM, 'unit2_FINAL'),
-										transitions={'finished': 'endAssignment', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
+										transitions={'finished': 'endAssignment', 'failed': 'failed', 'part_assembly': 'wait'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'part_assembly': Autonomy.Inherit},
 										remapping={'number_of_assembly_shipments': 'number_of_assembly_shipments', 'assembly_shipments': 'assembly_shipments'})
 
 			# x:920 y:321
@@ -103,7 +104,19 @@ class AProject_Fase_3_FinalSM(Behavior):
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
 										remapping={'number_of_kitting_shipments': 'number_of_kitting_shipments', 'kitting_shipments': 'kitting_shipments', 'kitting_index': 'kitting_index'})
 
-			# x:593 y:474
+			# x:749 y:453
+			OperatableStateMachine.add('wait',
+										WaitState(wait_time=0.5),
+										transitions={'done': 'unit_1_FINALE'},
+										autonomy={'done': Autonomy.Off})
+
+			# x:1071 y:416
+			OperatableStateMachine.add('wait_2',
+										WaitState(wait_time=0.5),
+										transitions={'done': 'unit2_FINAL'},
+										autonomy={'done': Autonomy.Off})
+
+			# x:535 y:578
 			OperatableStateMachine.add('endAssignment',
 										EndAssignment(),
 										transitions={'continue': 'finished'},
