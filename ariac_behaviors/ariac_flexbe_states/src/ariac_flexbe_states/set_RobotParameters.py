@@ -21,7 +21,7 @@ class set_Robot_Parameters(EventState):
 		Logger.loginfo(userdata.part_Type)
 		if userdata.part_Type == 'assembly_pomp_green' or userdata.part_Type == 'assembly_pomp_red' or userdata.part_Type == 'assembly_pump_blue':
 			userdata.drop_offset = [0,0,0.08]
-			userdata.pick_offset = [0,0,0.07]
+			userdata.pick_offset = [0,0,0.068]
 			userdata.pick_rotation =[0.0,0.0,0.0]
 		elif userdata.part_Type == 'assembly_sensor_green' or userdata.part_Type == 'assembly_sensor_red' or userdata.part_Type == 'assembly_sensor_blue':
 			userdata.drop_offset = [0,0,0.07]
@@ -33,7 +33,7 @@ class set_Robot_Parameters(EventState):
 			userdata.pick_rotation = [0.0,0.0,0.0]
 		elif userdata.part_Type == 'assembly_battery_green' or userdata.part_Type == 'assembly_battery_red' or userdata.part_Type == 'assembly_battery_blue':
 			userdata.drop_offset = [0,0,0.6]
-			userdata.pick_offset = [0.0,0.0,0.045]
+			userdata.pick_offset = [0.0,0.0,0.043]
 			userdata.pick_rotation = [0.0,0.0,0.0]
 		else :
 			Logger.logwarn('set RobotParameters :part_Type is not defined for offset')
