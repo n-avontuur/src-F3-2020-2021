@@ -51,10 +51,12 @@ class AProject_Fase_3_FinalSM(Behavior):
 
 
 	def create(self):
-		# x:354 y:568, x:1333 y:240
+		# x:1246 y:714, x:640 y:319
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 		_state_machine.userdata.kitting_index = 0
 		_state_machine.userdata.zero = 0
+		_state_machine.userdata.ProductIterator = 0
+		_state_machine.userdata.product_index = 0
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -76,47 +78,47 @@ class AProject_Fase_3_FinalSM(Behavior):
 										autonomy={'order_found': Autonomy.Off, 'no_order_found': Autonomy.Off},
 										remapping={'order_id': 'order_id', 'kitting_shipments': 'kitting_shipments', 'number_of_kitting_shipments': 'number_of_kitting_shipments', 'assembly_shipments': 'assembly_shipments', 'number_of_assembly_shipments': 'number_of_assembly_shipments'})
 
-			# x:324 y:174
+			# x:527 y:75
 			OperatableStateMachine.add('resetAssamblyIndex',
 										ReplaceState(),
 										transitions={'done': 'resetKittingIndex'},
 										autonomy={'done': Autonomy.Off},
 										remapping={'value': 'zero', 'result': 'assembly_index'})
 
-			# x:574 y:324
+			# x:726 y:71
 			OperatableStateMachine.add('resetKittingIndex',
 										ReplaceState(),
 										transitions={'done': 'unit_1_FINALE'},
 										autonomy={'done': Autonomy.Off},
 										remapping={'value': 'zero', 'result': 'kitting_index'})
 
-			# x:908 y:570
+			# x:1171 y:490
 			OperatableStateMachine.add('unit2_FINAL',
 										self.use_behavior(unit2_FINALSM, 'unit2_FINAL'),
 										transitions={'finished': 'endAssignment', 'failed': 'failed', 'part_assembly': 'wait'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'part_assembly': Autonomy.Inherit},
-										remapping={'number_of_assembly_shipments': 'number_of_assembly_shipments', 'assembly_shipments': 'assembly_shipments'})
+										remapping={'number_of_assembly_shipments': 'number_of_assembly_shipments', 'assembly_shipments': 'assembly_shipments', 'product_index': 'product_index'})
 
-			# x:920 y:321
+			# x:1186 y:314
 			OperatableStateMachine.add('unit_1_FINALE',
 										self.use_behavior(unit_1_FINALESM, 'unit_1_FINALE'),
 										transitions={'finished': 'unit2_FINAL', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
-										remapping={'number_of_kitting_shipments': 'number_of_kitting_shipments', 'kitting_shipments': 'kitting_shipments', 'kitting_index': 'kitting_index'})
+										remapping={'number_of_kitting_shipments': 'number_of_kitting_shipments', 'kitting_shipments': 'kitting_shipments', 'kitting_index': 'kitting_index', 'ProductIterator': 'ProductIterator'})
 
-			# x:749 y:453
+			# x:984 y:381
 			OperatableStateMachine.add('wait',
 										WaitState(wait_time=0.5),
 										transitions={'done': 'unit_1_FINALE'},
 										autonomy={'done': Autonomy.Off})
 
-			# x:1071 y:416
+			# x:1428 y:390
 			OperatableStateMachine.add('wait_2',
 										WaitState(wait_time=0.5),
 										transitions={'done': 'unit2_FINAL'},
 										autonomy={'done': Autonomy.Off})
 
-			# x:535 y:578
+			# x:1192 y:625
 			OperatableStateMachine.add('endAssignment',
 										EndAssignment(),
 										transitions={'continue': 'finished'},

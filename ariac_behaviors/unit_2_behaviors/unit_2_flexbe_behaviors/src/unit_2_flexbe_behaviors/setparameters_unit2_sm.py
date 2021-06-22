@@ -58,7 +58,7 @@ class setParameters_unit2SM(Behavior):
 
 	def create(self):
 		joint_names = ['linear_arm_actuator_joint', 'shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint', 'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']
-		# x:96 y:483, x:383 y:490, x:993 y:744, x:666 y:345
+		# x:33 y:240, x:383 y:490, x:993 y:744, x:833 y:340
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'not_found', 'assemblyCompleet'], input_keys=['product_index', 'assembly_shipments', 'number_of_assembly_shipments'], output_keys=['gantry_AGV_Pose', 'gantry_move_group', 'gantry_action_topic_namespace', 'robot_name', 'home_Pose', 'table_Pose', 'gantry_action_topic', 'part_Type', 'section_Pose', 'drop_Pose', 'pick_Pose'])
 		_state_machine.userdata.gantry_AGV_Pose = ''
 		_state_machine.userdata.gantry_move_group = ''
@@ -86,7 +86,7 @@ class setParameters_unit2SM(Behavior):
 
 
 		with _state_machine:
-			# x:49 y:71
+			# x:249 y:74
 			OperatableStateMachine.add('getAssamblyOrder',
 										GetAssemblyShipmentFromOrderState(),
 										transitions={'continue': 'checkNumberOfAssembly', 'invalid_index': 'checkNumberOfAssembly'},
@@ -100,24 +100,45 @@ class setParameters_unit2SM(Behavior):
 										autonomy={'done': Autonomy.Off},
 										remapping={'value_a': 'assembly_index', 'value_b': 'one', 'result': 'assembly_index'})
 
-			# x:362 y:221
+			# x:174 y:474
+			OperatableStateMachine.add('addAssembly_2',
+										AddNumericState(),
+										transitions={'done': 'replacePartIndex_2'},
+										autonomy={'done': Autonomy.Off},
+										remapping={'value_a': 'assembly_index', 'value_b': 'one', 'result': 'assembly_index'})
+
+			# x:520 y:221
 			OperatableStateMachine.add('assemblyOrder_ready',
 										self.use_behavior(assambly_readySM, 'assemblyOrder_ready'),
 										transitions={'finished': 'assemblyCompleet', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
 										remapping={'station_id': 'station_id', 'shipment_type': 'shipment_type', 'assembly_index': 'assembly_index', 'success': 'success', 'inspection_result': 'inspection_result'})
 
-			# x:724 y:224
+			# x:924 y:224
 			OperatableStateMachine.add('checkNumberOfAssembly',
 										EqualState(),
 										transitions={'true': 'assemblyOrder_ready', 'false': 'checkNumberOfPart'},
 										autonomy={'true': Autonomy.Off, 'false': Autonomy.Off},
 										remapping={'value_a': 'assembly_index', 'value_b': 'number_of_assembly_shipments'})
 
-			# x:1274 y:174
+			# x:168 y:224
+			OperatableStateMachine.add('checkNumberOfAssembly_2',
+										EqualState(),
+										transitions={'true': 'assemblyOrder_ready', 'false': 'finished'},
+										autonomy={'true': Autonomy.Off, 'false': Autonomy.Off},
+										remapping={'value_a': 'assembly_index', 'value_b': 'number_of_assembly_shipments'})
+
+			# x:1274 y:224
 			OperatableStateMachine.add('checkNumberOfPart',
 										EqualState(),
 										transitions={'true': 'addAssembly', 'false': 'getPartFromOrder'},
+										autonomy={'true': Autonomy.Off, 'false': Autonomy.Off},
+										remapping={'value_a': 'product_index', 'value_b': 'number_of_products'})
+
+			# x:24 y:574
+			OperatableStateMachine.add('checkNumberOfPart_2',
+										EqualState(),
+										transitions={'true': 'addAssembly_2', 'false': 'finished'},
 										autonomy={'true': Autonomy.Off, 'false': Autonomy.Off},
 										remapping={'value_a': 'product_index', 'value_b': 'number_of_products'})
 
@@ -135,42 +156,49 @@ class setParameters_unit2SM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off, 'not_found': Autonomy.Off},
 										remapping={'agv': 'sec_agv', 'ref_frame': 'ref_frame', 'camera_topic': 'camera_topic2', 'camera_frame': 'camera_frame2', 'part': 'part_Type', 'part_Pose': 'pick_Pose', 'agv_Name': 'agv_Name'})
 
-			# x:600 y:623
+			# x:591 y:674
 			OperatableStateMachine.add('getCasePose',
 										GetObjectPoseState(),
 										transitions={'continue': 'addAsPoseAndCasePose', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'ref_frame': 'ref_frame', 'frame': 'case_frame', 'pose': 'case_Pose'})
 
-			# x:1273 y:274
+			# x:1273 y:324
 			OperatableStateMachine.add('getPartFromOrder',
 										GetPartFromProductsState(),
 										transitions={'continue': 'setSectionParameters', 'invalid_index': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'invalid_index': Autonomy.Off},
 										remapping={'products': 'products', 'index': 'product_index', 'type': 'part_Type', 'pose': 'assambly_Pose'})
 
-			# x:724 y:74
+			# x:924 y:74
 			OperatableStateMachine.add('replacePartIndex',
 										ReplaceState(),
 										transitions={'done': 'getAssamblyOrder'},
 										autonomy={'done': Autonomy.Off},
 										remapping={'value': 'product_index', 'result': 'zero'})
 
-			# x:100 y:628
+			# x:174 y:374
+			OperatableStateMachine.add('replacePartIndex_2',
+										ReplaceState(),
+										transitions={'done': 'checkNumberOfAssembly_2'},
+										autonomy={'done': Autonomy.Off},
+										remapping={'value': 'product_index', 'result': 'zero'})
+
+			# x:42 y:674
 			OperatableStateMachine.add('setPickParameters',
 										setPickParameters(),
-										transitions={'continue': 'finished', 'failed': 'failed'},
+										transitions={'continue': 'checkNumberOfPart_2', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'station_id': 'station_id', 'agv_Name': 'agv_Name', 'gantry_AGV_Pose': 'gantry_AGV_Pose'})
 
-			# x:1283 y:367
+			# x:1284 y:424
 			OperatableStateMachine.add('setSectionParameters',
 										set_GantryParameters(),
 										transitions={'continue': 'findPartOnAGV1', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'station_id': 'station_id', 'home_Pose': 'home_Pose', 'table_Pose': 'table_Pose', 'section_Pose': 'section_Pose', 'gantry_move_group': 'gantry_move_group', 'gantry_action_topic_namespace': 'gantry_action_topic_namespace', 'gantry_action_topic': 'gantry_action_topic', 'robot_name': 'robot_name', 'camera_frame1': 'camera_frame1', 'camera_topic1': 'camera_topic1', 'camera_frame2': 'camera_frame2', 'camera_topic2': 'camera_topic2', 'first_agv': 'first_agv', 'sec_agv': 'sec_agv', 'case_frame': 'case_frame'})
 
-			# x:331 y:627
+			# x:275 y:674
 			OperatableStateMachine.add('addAsPoseAndCasePose',
 										AddOffsetToPoseState(),
 										transitions={'continue': 'setPickParameters'},

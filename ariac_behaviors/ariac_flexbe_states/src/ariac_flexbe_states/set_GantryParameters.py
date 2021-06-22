@@ -31,7 +31,7 @@ class set_GantryParameters(EventState):
 				userdata.first_agv = 'agv1'
 				userdata.sec_agv = 'agv2'
 			elif userdata.station_id == 'as3':
-				userdata.case_frame = 'briefcase_2'
+				userdata.case_frame = 'briefcase_3'
 				userdata.table_Pose= "AS3"
 				userdata.home_Pose='AS3_Home'
 				userdata.camera_frame1 = 'logical_camera_station3_agv3_frame'
@@ -44,7 +44,7 @@ class set_GantryParameters(EventState):
 		if userdata.station_id == 'as2' or  userdata.station_id =='as4':
 			userdata.section_Pose= "gantry_wp_as2_as4"
 			if userdata.station_id == 'as2':
-				userdata.case_frame = 'briefcase_3'
+				userdata.case_frame = 'briefcase_2'
 				userdata.table_Pose= "AS2"
 				userdata.home_Pose='AS2_Home'
 				userdata.camera_frame1 = 'logical_camera_station2_agv1_frame'

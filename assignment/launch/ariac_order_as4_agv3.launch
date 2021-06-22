@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
   <!-- Argument to the launch file.-->
-	<arg name="order_config" default="assignment_orders3.yaml"/>
+	<arg name="order_config" default="ariac_order_as4_agv3.yaml"/>
 	<arg name="sensor_config" default="assignment_sensor_config.yaml"/>
 
 	<arg name="verbose" default="false" />

@@ -44,13 +44,13 @@ class NotifyAssemblyReadyState(EventState):
 			return 'service_timeout'
 		# nog timeout op service
 		'''
-		AssemblyStationSubmitShipment = rospy.ServiceProxy(self._service, AssemblyStationSubmitShipment)
 
+		AssemblyStationSubmitShipmentVar = rospy.ServiceProxy(self._service, AssemblyStationSubmitShipment)
 
 		request = AssemblyStationSubmitShipmentRequest()
 		request.shipment_type = userdata.shipment_type
 		try:
-			srv_result = AssemblyStationSubmitShipment(request)
+			srv_result = AssemblyStationSubmitShipmentVar(request)
 			userdata.success = srv_result.success
 			userdata.inspection_result = srv_result.inspection_result
 			return 'continue'

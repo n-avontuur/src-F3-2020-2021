@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="CheckGipper">
+
+	<executable package_path="unit_2_flexbe_behaviors.checkgipper_sm" class="CheckGipperSM" />
+	<tagstring></tagstring>
+	<author>Niels Avontuur</author>
+	<date>Tue Jun 22 2021</date>
+	<description>
+		Checking if gripper has part
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

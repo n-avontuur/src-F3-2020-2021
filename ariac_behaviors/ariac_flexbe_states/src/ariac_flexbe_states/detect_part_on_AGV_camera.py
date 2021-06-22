@@ -93,11 +93,11 @@ class DetectPartOnAGVCamera(EventState):
 		rospy.logwarn(userdata.camera_frame)
 		#rospy.logwarn(userdata.part)
 		if not self._connected:
-			userdata.pose = None
+			userdata.part_Pose = None
 			return 'failed'
 
 		if self._failed:
-			userdata.pose = None
+			userdata.part_Pose = None
 			return 'failed'
 
 		elapsed = rospy.get_rostime() - self._start_time;

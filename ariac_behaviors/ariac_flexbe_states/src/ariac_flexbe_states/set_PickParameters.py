@@ -18,6 +18,8 @@ class setPickParameters(EventState):
 
 
 	def execute(self, userdata):
+		Logger.loginfo('Station id :')
+		Logger.loginfo(str(userdata.station_id))
 		if userdata.station_id == 'as1':
 			if userdata.agv_Name == 'agv1':
 				userdata.gantry_AGV_Pose = 'AS1_AGV1'
@@ -26,7 +28,7 @@ class setPickParameters(EventState):
 			else :
 				Logger.logwarn('No agv_name')
 				return 'failed'
-		if userdata.station_id == 'as2':
+		elif userdata.station_id == 'as2':
 			if userdata.agv_Name == 'agv1':
 				userdata.gantry_AGV_Pose = 'AS2_AGV1'
 			elif userdata.agv_Name == 'agv2':
@@ -35,7 +37,7 @@ class setPickParameters(EventState):
 				Logger.logwarn('No agv_name')
 				return 'failed'
 		
-		if userdata.station_id == 'as3':
+		elif userdata.station_id == 'as3':
 			if userdata.agv_Name == 'agv3':
 				userdata.gantry_AGV_Pose = 'AS3_AGV3'
 			elif userdata.agv_Name == 'agv4':
@@ -43,7 +45,7 @@ class setPickParameters(EventState):
 			else :
 				Logger.logwarn('No agv_name')
 				return 'failed'
-		if userdata.station_id == 'as4':
+		elif userdata.station_id == 'as4':
 			if userdata.agv_Name == 'agv3':
 				userdata.gantry_AGV_Pose = 'AS4_AGV3'
 			elif userdata.agv_Name == 'agv4':

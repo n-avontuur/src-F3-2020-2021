@@ -61,7 +61,7 @@ class Move_UR10_DropSM(Behavior):
 		_state_machine.userdata.falseVariable = False
 		_state_machine.userdata.trueVariable = True
 		_state_machine.userdata.drop_Pose = []
-		_state_machine.userdata.offset = 0.2
+		_state_machine.userdata.offset = 0.1
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -75,7 +75,7 @@ class Move_UR10_DropSM(Behavior):
 										set_Robot_Parameters(),
 										transitions={'continue': 'moveToPreDrop', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'part_Type': 'part_Type', 'UR10_move_group': 'UR10_move_group', 'UR10_action_topic_namespace': 'UR10_action_topic_namespace', 'UR10_action_topic': 'UR10_action_topic', 'UR10_tool_link': 'UR10_tool_link', 'UR10_robot_name': 'UR10_robot_name', 'gripper_service': 'gripper_service', 'gripper_status_topic': 'gripper_status_topic', 'gripper_status_attached': 'gripper_status_attached', 'gripper_status_enabled': 'gripper_status_enabled', 'armHomeDown': 'armHomeDown', 'armHomeUp': 'armHomeUp', 'armHomeAS': 'armHomeAS', 'pick_offset': 'part_offset', 'pick_rotation': 'part_rotation'})
+										remapping={'part_Type': 'part_Type', 'UR10_move_group': 'UR10_move_group', 'UR10_action_topic_namespace': 'UR10_action_topic_namespace', 'UR10_action_topic': 'UR10_action_topic', 'UR10_tool_link': 'UR10_tool_link', 'UR10_robot_name': 'UR10_robot_name', 'gripper_service': 'gripper_service', 'gripper_status_topic': 'gripper_status_topic', 'gripper_status_attached': 'gripper_status_attached', 'gripper_status_enabled': 'gripper_status_enabled', 'armHomeDown': 'armHomeDown', 'armHomeUp': 'armHomeUp', 'armHomeAS': 'armHomeAS', 'pick_offset': 'part_offset', 'pick_rotation': 'part_rotation', 'drop_offset': 'drop_offset'})
 
 			# x:979 y:324
 			OperatableStateMachine.add('computeDrop',

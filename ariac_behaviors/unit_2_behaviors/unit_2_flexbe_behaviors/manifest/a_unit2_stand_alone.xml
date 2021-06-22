@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="A.unit2_Stand_Alone">
+
+	<executable package_path="unit_2_flexbe_behaviors.a_unit2_stand_alone_sm" class="Aunit2_Stand_AloneSM" />
+	<tagstring></tagstring>
+	<author>Niels Avontuur</author>
+	<date>Wed Jun 16 2021</date>
+	<description>
+		Unit 2 Stand alone program
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="Move_UR10_Drop" />
+	<contains name="Move_UR10_Pick" />
+	<contains name="setParameters_unit2" />
+	<contains name="Home_UR10" />
+
+	<!-- Available Parameters -->
+
+</behavior>

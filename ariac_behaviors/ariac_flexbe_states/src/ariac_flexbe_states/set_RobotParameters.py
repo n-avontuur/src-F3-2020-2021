@@ -14,21 +14,25 @@ class set_Robot_Parameters(EventState):
 	'''
 
 	def __init__(self):
-		super(set_Robot_Parameters,self).__init__(input_keys=['part_Type'],outcomes = ['continue', 'failed'], output_keys = ['UR10_move_group','UR10_action_topic_namespace','UR10_action_topic','UR10_tool_link','UR10_robot_name','gripper_service','gripper_status_topic','gripper_status_attached','gripper_status_enabled','armHomeDown','armHomeUp','armHomeAS','pick_offset','pick_rotation'])
+		super(set_Robot_Parameters,self).__init__(input_keys=['part_Type'],outcomes = ['continue', 'failed'], output_keys = ['UR10_move_group','UR10_action_topic_namespace','UR10_action_topic','UR10_tool_link','UR10_robot_name','gripper_service','gripper_status_topic','gripper_status_attached','gripper_status_enabled','armHomeDown','armHomeUp','armHomeAS','pick_offset','pick_rotation','drop_offset'])
 
 
 	def execute(self, userdata):
 		Logger.loginfo(userdata.part_Type)
 		if userdata.part_Type == 'assembly_pomp_green' or userdata.part_Type == 'assembly_pomp_red' or userdata.part_Type == 'assembly_pump_blue':
+			userdata.drop_offset = [0,0,0.08]
 			userdata.pick_offset = [0,0,0.07]
 			userdata.pick_rotation =[0.0,0.0,0.0]
 		elif userdata.part_Type == 'assembly_sensor_green' or userdata.part_Type == 'assembly_sensor_red' or userdata.part_Type == 'assembly_sensor_blue':
+			userdata.drop_offset = [0,0,0.07]
 			userdata.pick_offset = [0.0,0.0,0.058]
 			userdata.pick_rotation = [0.0,0.0,0.0]
 		elif userdata.part_Type == 'assembly_regulator_green' or userdata.part_Type == 'assembly_regulator_red' or userdata.part_Type == 'assembly_regulator_blue':
+			userdata.drop_offset = [0,0,0.07]
 			userdata.pick_offset = [0.0,0.0,0.056]
 			userdata.pick_rotation = [0.0,0.0,0.0]
 		elif userdata.part_Type == 'assembly_battery_green' or userdata.part_Type == 'assembly_battery_red' or userdata.part_Type == 'assembly_battery_blue':
+			userdata.drop_offset = [0,0,0.6]
 			userdata.pick_offset = [0.0,0.0,0.045]
 			userdata.pick_rotation = [0.0,0.0,0.0]
 		else :

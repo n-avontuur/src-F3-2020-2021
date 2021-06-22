@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<behavior name="unit_1_FINALE">
+<behavior name="A.unit1_Stand_Alone">
 
-	<executable package_path="unit_1_flexbe_behaviors.unit_1_finale_sm" class="unit_1_FINALESM" />
+	<executable package_path="unit_1_flexbe_behaviors.a_unit1_stand_alone_sm" class="Aunit1_Stand_AloneSM" />
 	<tagstring></tagstring>
 	<author>kemal buke</author>
 	<date>Sun Jun 13 2021</date>
 	<description>
-		unit 1 fase 3
+		unit 1 stand alone-fase 3
 	</description>
 
 

@@ -9,6 +9,8 @@
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from ariac_flexbe_states.srdf_state_to_moveit_ariac_state import SrdfStateToMoveitAriac
+from ariac_flexbe_states.start_assignment_state import StartAssignment
+from ariac_logistics_flexbe_states.get_order_state import GetOrderState
 from ariac_support_flexbe_states.add_numeric_state import AddNumericState
 from flexbe_states.wait_state import WaitState
 from unit_2_flexbe_behaviors.home_ur10_sm import Home_UR10SM
@@ -25,15 +27,15 @@ from unit_2_flexbe_behaviors.setparameters_unit2_sm import setParameters_unit2SM
 Created on Wed Jun 16 2021
 @author: Niels Avontuur
 '''
-class unit2_FINALSM(Behavior):
+class Aunit2_Stand_AloneSM(Behavior):
 	'''
-	Unit 2 main program
+	Unit 2 Stand alone program
 	'''
 
 
 	def __init__(self):
-		super(unit2_FINALSM, self).__init__()
-		self.name = 'unit2_FINAL'
+		super(Aunit2_Stand_AloneSM, self).__init__()
+		self.name = 'A.unit2_Stand_Alone'
 
 		# parameters of this behavior
 
@@ -56,12 +58,13 @@ class unit2_FINALSM(Behavior):
 
 
 	def create(self):
-		# x:833 y:40, x:636 y:305, x:262 y:162
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'part_assembly'], input_keys=['number_of_assembly_shipments', 'assembly_shipments', 'product_index'], output_keys=['product_index'])
+		# x:833 y:40, x:636 y:305
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['number_of_assembly_shipments', 'assembly_shipments', 'product_index'], output_keys=['product_index'])
 		_state_machine.userdata.product_index = 0
 		_state_machine.userdata.oneVariable = 1
 		_state_machine.userdata.number_of_assembly_shipments = 0
 		_state_machine.userdata.assembly_shipments = []
+		_state_machine.userdata.assembly_index = 0
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -70,12 +73,11 @@ class unit2_FINALSM(Behavior):
 
 
 		with _state_machine:
-			# x:770 y:121
-			OperatableStateMachine.add('setParameters_unit2',
-										self.use_behavior(setParameters_unit2SM, 'setParameters_unit2'),
-										transitions={'finished': 'Home_UR10', 'failed': 'failed', 'not_found': 'failed', 'assemblyCompleet': 'finished'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'not_found': Autonomy.Inherit, 'assemblyCompleet': Autonomy.Inherit},
-										remapping={'product_index': 'product_index', 'assembly_shipments': 'assembly_shipments', 'number_of_assembly_shipments': 'number_of_assembly_shipments', 'gantry_AGV_Pose': 'AGV_Pose', 'gantry_move_group': 'move_group', 'gantry_action_topic_namespace': 'action_topic_namespace', 'robot_name': 'robot_name', 'home_Pose': 'home_Pose', 'table_Pose': 'table_Pose', 'gantry_action_topic': 'action_topic', 'part_Type': 'part_Type', 'section_Pose': 'section_Pose', 'drop_Pose': 'drop_Pose', 'pick_Pose': 'pick_Pose'})
+			# x:89 y:75
+			OperatableStateMachine.add('startAssignment',
+										StartAssignment(),
+										transitions={'continue': 'wait_6'},
+										autonomy={'continue': Autonomy.Off})
 
 			# x:420 y:471
 			OperatableStateMachine.add('Move_UR10_Drop',
@@ -94,14 +96,21 @@ class unit2_FINALSM(Behavior):
 			# x:174 y:474
 			OperatableStateMachine.add('addPart',
 										AddNumericState(),
-										transitions={'done': 'moveToGantryAsHome_3'},
+										transitions={'done': 'moveToGantryAsHome_2'},
 										autonomy={'done': Autonomy.Off},
 										remapping={'value_a': 'product_index', 'value_b': 'oneVariable', 'result': 'product_index'})
+
+			# x:373 y:74
+			OperatableStateMachine.add('getOrder',
+										GetOrderState(),
+										transitions={'order_found': 'setParameters_unit2', 'no_order_found': 'finished'},
+										autonomy={'order_found': Autonomy.Off, 'no_order_found': Autonomy.Off},
+										remapping={'order_id': 'order_id', 'kitting_shipments': 'kitting_shipments', 'number_of_kitting_shipments': 'number_of_kitting_shipments', 'assembly_shipments': 'assembly_shipments', 'number_of_assembly_shipments': 'number_of_assembly_shipments'})
 
 			# x:676 y:474
 			OperatableStateMachine.add('moveToGantryAs',
 										SrdfStateToMoveitAriac(),
-										transitions={'reached': 'Move_UR10_Drop', 'planning_failed': 'wait_2_2', 'control_failed': 'wait_2_2', 'param_error': 'failed'},
+										transitions={'reached': 'Move_UR10_Drop', 'planning_failed': 'wait_4', 'control_failed': 'wait_4', 'param_error': 'failed'},
 										autonomy={'reached': Autonomy.Off, 'planning_failed': Autonomy.Off, 'control_failed': Autonomy.Off, 'param_error': Autonomy.Off},
 										remapping={'config_name': 'table_Pose', 'move_group': 'move_group', 'action_topic_namespace': 'action_topic_namespace', 'action_topic': 'action_topic', 'robot_name': 'robot_name', 'config_name_out': 'config_name_out', 'move_group_out': 'move_group_out', 'robot_name_out': 'robot_name_out', 'action_topic_out': 'action_topic_out', 'joint_values': 'joint_values', 'joint_names': 'joint_names'})
 
@@ -119,10 +128,10 @@ class unit2_FINALSM(Behavior):
 										autonomy={'reached': Autonomy.Off, 'planning_failed': Autonomy.Off, 'control_failed': Autonomy.Off, 'param_error': Autonomy.Off},
 										remapping={'config_name': 'home_Pose', 'move_group': 'move_group', 'action_topic_namespace': 'action_topic_namespace', 'action_topic': 'action_topic', 'robot_name': 'robot_name', 'config_name_out': 'config_name_out', 'move_group_out': 'move_group_out', 'robot_name_out': 'robot_name_out', 'action_topic_out': 'action_topic_out', 'joint_values': 'joint_values', 'joint_names': 'joint_names'})
 
-			# x:176 y:324
-			OperatableStateMachine.add('moveToGantryAsHome_3',
+			# x:178 y:329
+			OperatableStateMachine.add('moveToGantryAsHome_2',
 										SrdfStateToMoveitAriac(),
-										transitions={'reached': 'moveToGantrySection_2', 'planning_failed': 'wait_5', 'control_failed': 'wait_5', 'param_error': 'failed'},
+										transitions={'reached': 'moveToGantrySection_2', 'planning_failed': 'wait_7', 'control_failed': 'wait_7', 'param_error': 'failed'},
 										autonomy={'reached': Autonomy.Off, 'planning_failed': Autonomy.Off, 'control_failed': Autonomy.Off, 'param_error': Autonomy.Off},
 										remapping={'config_name': 'home_Pose', 'move_group': 'move_group', 'action_topic_namespace': 'action_topic_namespace', 'action_topic': 'action_topic', 'robot_name': 'robot_name', 'config_name_out': 'config_name_out', 'move_group_out': 'move_group_out', 'robot_name_out': 'robot_name_out', 'action_topic_out': 'action_topic_out', 'joint_values': 'joint_values', 'joint_names': 'joint_names'})
 
@@ -133,12 +142,19 @@ class unit2_FINALSM(Behavior):
 										autonomy={'reached': Autonomy.Off, 'planning_failed': Autonomy.Off, 'control_failed': Autonomy.Off, 'param_error': Autonomy.Off},
 										remapping={'config_name': 'section_Pose', 'move_group': 'move_group', 'action_topic_namespace': 'action_topic_namespace', 'action_topic': 'action_topic', 'robot_name': 'robot_name', 'config_name_out': 'config_name_out', 'move_group_out': 'move_group_out', 'robot_name_out': 'robot_name_out', 'action_topic_out': 'action_topic_out', 'joint_values': 'joint_values', 'joint_names': 'joint_names'})
 
-			# x:178 y:224
+			# x:185 y:226
 			OperatableStateMachine.add('moveToGantrySection_2',
 										SrdfStateToMoveitAriac(),
-										transitions={'reached': 'part_assembly', 'planning_failed': 'wait_4', 'control_failed': 'wait_4', 'param_error': 'failed'},
+										transitions={'reached': 'setParameters_unit2', 'planning_failed': 'wait_5', 'control_failed': 'wait_5', 'param_error': 'failed'},
 										autonomy={'reached': Autonomy.Off, 'planning_failed': Autonomy.Off, 'control_failed': Autonomy.Off, 'param_error': Autonomy.Off},
 										remapping={'config_name': 'section_Pose', 'move_group': 'move_group', 'action_topic_namespace': 'action_topic_namespace', 'action_topic': 'action_topic', 'robot_name': 'robot_name', 'config_name_out': 'config_name_out', 'move_group_out': 'move_group_out', 'robot_name_out': 'robot_name_out', 'action_topic_out': 'action_topic_out', 'joint_values': 'joint_values', 'joint_names': 'joint_names'})
+
+			# x:770 y:121
+			OperatableStateMachine.add('setParameters_unit2',
+										self.use_behavior(setParameters_unit2SM, 'setParameters_unit2'),
+										transitions={'finished': 'Home_UR10', 'failed': 'failed', 'not_found': 'failed', 'assemblyCompleet': 'finished'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'not_found': Autonomy.Inherit, 'assemblyCompleet': Autonomy.Inherit},
+										remapping={'product_index': 'product_index', 'assembly_shipments': 'assembly_shipments', 'number_of_assembly_shipments': 'number_of_assembly_shipments', 'gantry_AGV_Pose': 'AGV_Pose', 'gantry_move_group': 'move_group', 'gantry_action_topic_namespace': 'action_topic_namespace', 'robot_name': 'robot_name', 'home_Pose': 'home_Pose', 'table_Pose': 'table_Pose', 'gantry_action_topic': 'action_topic', 'part_Type': 'part_Type', 'section_Pose': 'section_Pose', 'drop_Pose': 'drop_Pose', 'pick_Pose': 'pick_Pose'})
 
 			# x:1357 y:224
 			OperatableStateMachine.add('wait',
@@ -152,28 +168,34 @@ class unit2_FINALSM(Behavior):
 										transitions={'done': 'moveToGantryAsHome'},
 										autonomy={'done': Autonomy.Off})
 
-			# x:707 y:574
-			OperatableStateMachine.add('wait_2_2',
-										WaitState(wait_time=0.5),
-										transitions={'done': 'moveToGantryAs'},
-										autonomy={'done': Autonomy.Off})
-
 			# x:1357 y:424
 			OperatableStateMachine.add('wait_3',
 										WaitState(wait_time=0.5),
 										transitions={'done': 'moveToGantryAsAGV'},
 										autonomy={'done': Autonomy.Off})
 
-			# x:7 y:224
+			# x:699 y:596
 			OperatableStateMachine.add('wait_4',
+										WaitState(wait_time=0.5),
+										transitions={'done': 'moveToGantryAs'},
+										autonomy={'done': Autonomy.Off})
+
+			# x:16 y:225
+			OperatableStateMachine.add('wait_5',
 										WaitState(wait_time=0.5),
 										transitions={'done': 'moveToGantrySection_2'},
 										autonomy={'done': Autonomy.Off})
 
-			# x:7 y:324
-			OperatableStateMachine.add('wait_5',
+			# x:245 y:67
+			OperatableStateMachine.add('wait_6',
 										WaitState(wait_time=0.5),
-										transitions={'done': 'moveToGantryAsHome_3'},
+										transitions={'done': 'getOrder'},
+										autonomy={'done': Autonomy.Off})
+
+			# x:10 y:328
+			OperatableStateMachine.add('wait_7',
+										WaitState(wait_time=0.5),
+										transitions={'done': 'moveToGantryAsHome_2'},
 										autonomy={'done': Autonomy.Off})
 
 			# x:1120 y:121
