@@ -74,12 +74,12 @@ class AProject_Fase_3_FinalSM(Behavior):
 			# x:323 y:74
 			OperatableStateMachine.add('getOrder',
 										GetOrderState(),
-										transitions={'order_found': 'resetAssamblyIndex', 'no_order_found': 'failed'},
+										transitions={'order_found': 'resetAssemblyIndex', 'no_order_found': 'failed'},
 										autonomy={'order_found': Autonomy.Off, 'no_order_found': Autonomy.Off},
 										remapping={'order_id': 'order_id', 'kitting_shipments': 'kitting_shipments', 'number_of_kitting_shipments': 'number_of_kitting_shipments', 'assembly_shipments': 'assembly_shipments', 'number_of_assembly_shipments': 'number_of_assembly_shipments'})
 
 			# x:527 y:75
-			OperatableStateMachine.add('resetAssamblyIndex',
+			OperatableStateMachine.add('resetAssemblyIndex',
 										ReplaceState(),
 										transitions={'done': 'resetKittingIndex'},
 										autonomy={'done': Autonomy.Off},
